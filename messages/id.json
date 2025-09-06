@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "products": "Produk",
+    "strengths": "Kekuatan",
+    "contact": "Kontak",
+    "admin": "Admin"
+  },
+  "lang": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "id": "Bahasa Indonesia"
+  },
+  "hero": {
+    "title": "Keunggulan Artisan – Visi Global",
+    "subtitle": "Temukan koleksi tas tangan premium buatan tangan kami dengan semangat inovatif dan kualitas superior.",
+    "cta": "Jelajahi Sekarang"
+  },
+  "about": {
+    "title": "Tentang TBS Group",
+    "description": "Dengan lebih dari 20 tahun pengalaman di industri fashion, TBS Group Handbag Division dengan bangga memelopori dalam menciptakan produk tas tangan berkualitas tinggi, menggabungkan kerajinan tradisional dengan teknologi modern."
+  },
+  "collections": {
+    "title": "Koleksi Unggulan",
+    "premium": {
+      "title": "Premium Urban Elegance",
+      "description": "Untuk wanita modern dan dinamis dengan gaya elegan dan canggih."
+    },
+    "sustainable": {
+      "title": "Sustainable Heritage",
+      "description": "Koleksi berkelanjutan, menunjukkan komitmen kami terhadap lingkungan dan masa depan."
+    },
+    "seasonal": {
+      "title": "Seasonal Innovation",
+      "description": "Desain terbaru mengikuti tren fashion musiman."
+    }
+  },
+  "strengths": {
+    "title": "Kekuatan Inti",
+    "quality": {
+      "title": "Kontrol Kualitas",
+      "description": "Proses kontrol kualitas yang ketat dari bahan baku hingga produk jadi"
+    },
+    "materials": {
+      "title": "Bahan Berkelanjutan",
+      "description": "Berkomitmen menggunakan bahan ramah lingkungan"
+    },
+    "innovation": {
+      "title": "Inovasi Desain",
+      "description": "Terus menerus menciptakan dan mengembangkan pola desain yang unik"
+    },
+    "network": {
+      "title": "Jaringan Pasokan Global",
+      "description": "Sistem pasokan di seluruh dunia memastikan kualitas dan jadwal"
+    },
+    "craftsmanship": {
+      "title": "Keahlian Terampil",
+      "description": "Tim pengrajin terampil dengan pengalaman bertahun-tahun"
+    }
+  },
+  "contact": {
+    "title": "Kontak untuk Konsultasi",
+    "description": "Tinggalkan informasi Anda agar kami dapat memberikan saran produk yang paling sesuai.",
+    "form": {
+      "email": "Email",
+      "content": "Konten",
+      "images": "Gambar Referensi",
+      "submit": "Kirim Permintaan",
+      "sending": "Mengirim...",
+      "dragDrop": "Seret & lepas atau klik untuk memilih gambar",
+      "maxFiles": "Maksimal 5 gambar, masing-masing tidak melebihi 5MB"
+    },
+    "success": {
+      "title": "Berhasil Dikirim!",
+      "message": "Kami akan menghubungi Anda sesegera mungkin."
+    },
+    "error": {
+      "title": "Terjadi kesalahan",
+      "message": "Silakan coba lagi nanti."
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Login Admin",
+      "email": "Email",
+      "password": "Kata Sandi",
+      "submit": "Masuk",
+      "error": "Email atau kata sandi tidak valid"
+    },
+    "dashboard": {
+      "title": "Permintaan Konsultasi",
+      "table": {
+        "email": "Email",
+        "content": "Konten",
+        "images": "Gambar",
+        "createdAt": "Dibuat"
+      },
+      "logout": "Keluar",
+      "noData": "Belum ada permintaan"
+    }
+  },
+  "footer": {
+    "company": "TBS Group Handbag Division",
+    "rights": "Semua hak dilindungi.",
+    "description": "Keunggulan Artisan - Visi Global"
+  }
+}
