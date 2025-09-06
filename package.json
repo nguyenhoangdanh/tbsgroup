@@ -1,0 +1,45 @@
+{
+  "name": "tbs-handbag-division",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.462.0",
+    "@aws-sdk/s3-request-presigner": "^3.462.0",
+    "@next/font": "^14.0.4",
+    "@prisma/client": "^5.7.1",
+    "bcryptjs": "^2.4.3",
+    "framer-motion": "^10.16.16",
+    "next": "^14.0.4",
+    "next-auth": "^4.24.5",
+    "next-intl": "^3.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "postcss": "^8.4.32",
+    "prisma": "^5.7.1",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
+  }
+}

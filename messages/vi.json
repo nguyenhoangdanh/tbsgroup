@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "products": "Sản phẩm",
+    "strengths": "Năng lực",
+    "contact": "Liên hệ",
+    "admin": "Quản trị"
+  },
+  "lang": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "id": "Bahasa Indonesia"
+  },
+  "hero": {
+    "title": "Tinh hoa thủ công – Tầm nhìn toàn cầu",
+    "subtitle": "Khám phá bộ sưu tập túi xách cao cấp được chế tác bằng tay với tinh thần sáng tạo và chất lượng vượt trội.",
+    "cta": "Khám phá ngay"
+  },
+  "about": {
+    "title": "Về TBS Group",
+    "description": "Với hơn 20 năm kinh nghiệm trong ngành thời trang, TBS Group Handbag Division tự hào là đơn vị tiên phong trong việc tạo ra những sản phẩm túi xách chất lượng cao, kết hợp giữa nghệ thuật truyền thống và công nghệ hiện đại."
+  },
+  "collections": {
+    "title": "Bộ sưu tập nổi bật",
+    "premium": {
+      "title": "Premium Urban Elegance",
+      "description": "Dành cho người phụ nữ hiện đại, năng động với phong cách thanh lịch và tinh tế."
+    },
+    "sustainable": {
+      "title": "Sustainable Heritage",
+      "description": "Bộ sưu tập bền vững, thể hiện cam kết của chúng tôi với môi trường và tương lai."
+    },
+    "seasonal": {
+      "title": "Seasonal Innovation",
+      "description": "Những thiết kế mới nhất theo xu hướng thời trang từng mùa."
+    }
+  },
+  "strengths": {
+    "title": "Năng lực cốt lõi",
+    "quality": {
+      "title": "Kiểm soát chất lượng",
+      "description": "Quy trình kiểm soát chất lượng nghiêm ngặt từ nguyên liệu đến thành phẩm"
+    },
+    "materials": {
+      "title": "Vật liệu bền vững",
+      "description": "Cam kết sử dụng nguyên liệu thân thiện với môi trường"
+    },
+    "innovation": {
+      "title": "Đổi mới thiết kế",
+      "description": "Không ngừng sáng tạo và phát triển các mẫu thiết kế độc đáo"
+    },
+    "network": {
+      "title": "Mạng lưới cung ứng toàn cầu",
+      "description": "Hệ thống cung ứng rộng khắp đảm bảo chất lượng và tiến độ"
+    },
+    "craftsmanship": {
+      "title": "Tay nghề thủ công",
+      "description": "Đội ngũ thợ lành nghề với nhiều năm kinh nghiệm"
+    }
+  },
+  "contact": {
+    "title": "Liên hệ tư vấn",
+    "description": "Để lại thông tin để chúng tôi tư vấn cho bạn về các sản phẩm phù hợp nhất.",
+    "form": {
+      "email": "Email",
+      "content": "Nội dung",
+      "images": "Hình ảnh tham khảo",
+      "submit": "Gửi yêu cầu",
+      "sending": "Đang gửi...",
+      "dragDrop": "Kéo thả hoặc nhấp để chọn ảnh",
+      "maxFiles": "Tối đa 5 ảnh, mỗi ảnh không quá 5MB"
+    },
+    "success": {
+      "title": "Gửi thành công!",
+      "message": "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
+    },
+    "error": {
+      "title": "Có lỗi xảy ra",
+      "message": "Vui lòng thử lại sau."
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Đăng nhập quản trị",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "submit": "Đăng nhập",
+      "error": "Email hoặc mật khẩu không đúng"
+    },
+    "dashboard": {
+      "title": "Danh sách yêu cầu tư vấn",
+      "table": {
+        "email": "Email",
+        "content": "Nội dung",
+        "images": "Hình ảnh",
+        "createdAt": "Thời gian"
+      },
+      "logout": "Đăng xuất",
+      "noData": "Chưa có yêu cầu nào"
+    }
+  },
+  "footer": {
+    "company": "TBS Group Handbag Division",
+    "rights": "Tất cả các quyền được bảo lưu.",
+    "description": "Tinh hoa thủ công - Tầm nhìn toàn cầu"
+  }
+}

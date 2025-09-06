@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "strengths": "Strengths",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "lang": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "id": "Bahasa Indonesia"
+  },
+  "hero": {
+    "title": "Artisanal Excellence – Global Vision",
+    "subtitle": "Discover our premium handcrafted handbag collections with innovative spirit and superior quality.",
+    "cta": "Explore Now"
+  },
+  "about": {
+    "title": "About TBS Group",
+    "description": "With over 20 years of experience in the fashion industry, TBS Group Handbag Division proudly pioneers in creating high-quality handbag products, combining traditional craftsmanship with modern technology."
+  },
+  "collections": {
+    "title": "Featured Collections",
+    "premium": {
+      "title": "Premium Urban Elegance",
+      "description": "For the modern, dynamic woman with elegant and sophisticated style."
+    },
+    "sustainable": {
+      "title": "Sustainable Heritage",
+      "description": "Sustainable collection, demonstrating our commitment to the environment and future."
+    },
+    "seasonal": {
+      "title": "Seasonal Innovation",
+      "description": "Latest designs following seasonal fashion trends."
+    }
+  },
+  "strengths": {
+    "title": "Core Strengths",
+    "quality": {
+      "title": "Quality Control",
+      "description": "Strict quality control process from raw materials to finished products"
+    },
+    "materials": {
+      "title": "Sustainable Materials",
+      "description": "Committed to using environmentally friendly materials"
+    },
+    "innovation": {
+      "title": "Design Innovation",
+      "description": "Continuously creating and developing unique design patterns"
+    },
+    "network": {
+      "title": "Global Supply Network",
+      "description": "Worldwide supply system ensuring quality and schedule"
+    },
+    "craftsmanship": {
+      "title": "Skilled Craftsmanship",
+      "description": "Team of skilled craftsmen with years of experience"
+    }
+  },
+  "contact": {
+    "title": "Contact for Consultation",
+    "description": "Leave your information so we can advise you on the most suitable products.",
+    "form": {
+      "email": "Email",
+      "content": "Content",
+      "images": "Reference Images",
+      "submit": "Send Request",
+      "sending": "Sending...",
+      "dragDrop": "Drag & drop or click to select images",
+      "maxFiles": "Maximum 5 images, each not exceeding 5MB"
+    },
+    "success": {
+      "title": "Sent Successfully!",
+      "message": "We will contact you as soon as possible."
+    },
+    "error": {
+      "title": "An error occurred",
+      "message": "Please try again later."
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "error": "Invalid email or password"
+    },
+    "dashboard": {
+      "title": "Consultation Requests",
+      "table": {
+        "email": "Email",
+        "content": "Content",
+        "images": "Images",
+        "createdAt": "Created"
+      },
+      "logout": "Logout",
+      "noData": "No requests yet"
+    }
+  },
+  "footer": {
+    "company": "TBS Group Handbag Division",
+    "rights": "All rights reserved.",
+    "description": "Artisanal Excellence - Global Vision"
+  }
+}
