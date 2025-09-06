@@ -14,7 +14,28 @@
   "hero": {
     "title": "Tinh hoa thủ công – Tầm nhìn toàn cầu",
     "subtitle": "Khám phá bộ sưu tập túi xách cao cấp được chế tác bằng tay với tinh thần sáng tạo và chất lượng vượt trội.",
-    "cta": "Khám phá ngay"
+    "slide1": {
+      "title": "Tinh hoa thủ công",
+      "subtitle": "Tầm nhìn toàn cầu",
+      "description": "Khám phá bộ sưu tập túi xách cao cấp được chế tác bằng tay với tinh thần sáng tạo và chất lượng vượt trội."
+    },
+    "slide2": {
+      "title": "Bền vững & Trách nhiệm",
+      "subtitle": "Cam kết với tương lai",
+      "description": "Chúng tôi tin rằng thời trang bền vững là chìa khóa cho một tương lai tốt đẹp hơn."
+    },
+    "slide3": {
+      "title": "Đổi mới không ngừng",
+      "subtitle": "Xu hướng dẫn đầu",
+      "description": "Luôn đi đầu trong việc tạo ra những thiết kế mới, phù hợp với xu hướng thời trang thế giới."
+    },
+    "cta": {
+      "explore": "Khám phá",
+      "contact": "Liên hệ"
+    },
+    "scroll": {
+      "down": "Cuộn xuống"
+    }
   },
   "about": {
     "title": "Về TBS Group",

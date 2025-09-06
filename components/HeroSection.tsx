@@ -10,7 +10,7 @@ export function HeroSection() {
   const t = useTranslations();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-neutral-50 to-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-brand-accent rounded-full blur-3xl"></div>
@@ -20,13 +20,13 @@ export function HeroSection() {
       <div className="relative max-w-7xl mx-auto container-padding text-center">
         <MotionStagger className="space-y-8">
           <MotionStaggerItem>
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-brand-primary leading-tight">
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-brand-secondary leading-tight">
               {t('hero.title')}
             </h1>
           </MotionStaggerItem>
 
           <MotionStaggerItem>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-brand-neutral-600 max-w-3xl mx-auto leading-relaxed">
               {t('hero.subtitle')}
             </p>
           </MotionStaggerItem>

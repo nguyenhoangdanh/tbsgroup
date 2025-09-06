@@ -14,7 +14,28 @@
   "hero": {
     "title": "Artisanal Excellence – Global Vision",
     "subtitle": "Discover our premium handcrafted handbag collections with innovative spirit and superior quality.",
-    "cta": "Explore Now"
+    "slide1": {
+      "title": "Artisanal Excellence",
+      "subtitle": "Global Vision",
+      "description": "Discover our premium handcrafted handbag collections with innovative spirit and superior quality."
+    },
+    "slide2": {
+      "title": "Sustainable & Responsible",
+      "subtitle": "Commitment to the Future",
+      "description": "We believe that sustainable fashion is the key to a better future for everyone."
+    },
+    "slide3": {
+      "title": "Continuous Innovation",
+      "subtitle": "Leading Trends",
+      "description": "Always leading in creating new designs that align with global fashion trends."
+    },
+    "cta": {
+      "explore": "Explore",
+      "contact": "Contact"
+    },
+    "scroll": {
+      "down": "Scroll down"
+    }
   },
   "about": {
     "title": "About TBS Group",

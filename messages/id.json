@@ -14,7 +14,28 @@
   "hero": {
     "title": "Keunggulan Artisan – Visi Global",
     "subtitle": "Temukan koleksi tas tangan premium buatan tangan kami dengan semangat inovatif dan kualitas superior.",
-    "cta": "Jelajahi Sekarang"
+    "slide1": {
+      "title": "Keunggulan Artisan",
+      "subtitle": "Visi Global",
+      "description": "Temukan koleksi tas tangan premium buatan tangan kami dengan semangat inovatif dan kualitas superior."
+    },
+    "slide2": {
+      "title": "Berkelanjutan & Bertanggung Jawab",
+      "subtitle": "Komitmen untuk Masa Depan",
+      "description": "Kami percaya bahwa fashion berkelanjutan adalah kunci untuk masa depan yang lebih baik bagi semua."
+    },
+    "slide3": {
+      "title": "Inovasi Berkelanjutan",
+      "subtitle": "Memimpin Tren",
+      "description": "Selalu memimpin dalam menciptakan desain baru yang selaras dengan tren fashion global."
+    },
+    "cta": {
+      "explore": "Jelajahi",
+      "contact": "Kontak"
+    },
+    "scroll": {
+      "down": "Gulir ke bawah"
+    }
   },
   "about": {
     "title": "Tentang TBS Group",

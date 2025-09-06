@@ -8,7 +8,7 @@
   }
   
   body {
-    @apply text-brand-primary;
+    @apply text-brand-secondary;
   }
 }
 
@@ -22,22 +22,34 @@
   }
   
   .btn-primary {
-    @apply bg-brand-accent hover:bg-brand-accent/90 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-brand-primary hover:bg-brand-primary-dark text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
   }
   
   .btn-secondary {
-    @apply border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105;
+  }
+  
+  .btn-accent {
+    @apply bg-brand-accent hover:bg-brand-accent/90 text-brand-secondary px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
   }
   
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+    @apply bg-white rounded-2xl shadow-sm border border-brand-neutral-200 overflow-hidden hover:shadow-lg transition-shadow duration-300;
   }
   
   .input {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 border border-brand-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all duration-200;
   }
   
   .textarea {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-accent focus:border-transparent transition-all duration-200 resize-none;
+    @apply w-full px-4 py-3 border border-brand-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-all duration-200 resize-none;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent;
+  }
+  
+  .gradient-border {
+    @apply bg-gradient-to-r from-brand-primary to-brand-accent p-0.5 rounded-lg;
   }
 }

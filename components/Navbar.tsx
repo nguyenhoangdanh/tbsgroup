@@ -41,10 +41,10 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-brand-accent rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">TBS</span>
             </div>
-            <span className="font-serif text-xl font-bold text-brand-primary">
+            <span className="font-serif text-xl font-bold text-brand-secondary">
               TBS Group
             </span>
           </Link>
@@ -55,7 +55,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-700 hover:text-brand-primary font-medium transition-colors duration-200"
+                className="text-brand-neutral-700 hover:text-brand-primary font-medium transition-colors duration-200"
               >
                 {item.label}
               </Link>
@@ -68,7 +68,7 @@ export function Navbar() {
             
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-gray-700 hover:text-brand-primary transition-colors"
+              className="lg:hidden p-2 text-brand-neutral-700 hover:text-brand-primary transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMobileMenuOpen ? (
@@ -94,7 +94,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block px-4 py-2 text-gray-700 hover:text-brand-primary hover:bg-gray-50 rounded-lg transition-colors"
+                  className="block px-4 py-2 text-brand-neutral-700 hover:text-brand-primary hover:bg-brand-neutral-50 rounded-lg transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
