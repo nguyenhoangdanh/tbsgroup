@@ -53,7 +53,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         />
 
         {/* Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pt-16">
           <div className="container-responsive py-6">
             {children}
           </div>
