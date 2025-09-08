@@ -14,6 +14,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   onBlur,
   onFocus,
+  onKeyDown,
   leftIcon,
   rightIcon,
   autoComplete,
@@ -37,6 +38,10 @@ const Input: React.FC<InputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown?.(e);
   };
 
   return (
@@ -64,6 +69,7 @@ const Input: React.FC<InputProps> = ({
           onChange={handleChange}
           onBlur={onBlur}
           onFocus={onFocus}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
           required={required}

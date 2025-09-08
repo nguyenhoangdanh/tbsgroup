@@ -35,6 +35,7 @@ export interface InputProps extends BaseComponentProps {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   autoComplete?: string;

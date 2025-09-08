@@ -1,4 +1,4 @@
-import { CategoriesPage } from '@/components/CategoriesPage';
+import CategoriesManager from '@/components/admin/CategoriesManager';
 
 interface PageProps {
   params: {
@@ -7,5 +7,5 @@ interface PageProps {
 }
 
 export default function AdminCategoriesPage({ params }: PageProps) {
-  return <CategoriesPage locale={params.locale} />;
+  return <CategoriesManager locale={params.locale} />;
 }

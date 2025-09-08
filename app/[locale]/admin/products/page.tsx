@@ -1,4 +1,4 @@
-import { ProductsPage } from '@/components/ProductsPage';
+import ProductsManager from '@/components/admin/ProductsManager';
 
 interface PageProps {
   params: {
@@ -7,5 +7,5 @@ interface PageProps {
 }
 
 export default function AdminProductsPage({ params }: PageProps) {
-  return <ProductsPage locale={params.locale} />;
+  return <ProductsManager locale={params.locale} />;
 }
