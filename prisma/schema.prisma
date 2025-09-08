@@ -10,11 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
+
 model AdminUser {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
+  role      AdminRole @default(ADMIN)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("admin_users")
 }
@@ -27,4 +35,51 @@ model CustomerInquiry {
   createdAt DateTime @default(now())
 
   @@map("customer_inquiries")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  nameVi      String?
+  nameEn      String?
+  nameId      String?
+  description String?
+  descriptionVi String?
+  descriptionEn String?
+  descriptionId String?
+  imageUrl    String?
+  slug        String    @unique
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String
+  nameVi      String?
+  nameEn      String?
+  nameId      String?
+  description String?
+  descriptionVi String?
+  descriptionEn String?
+  descriptionId String?
+  imageUrls   String[]
+  slug        String    @unique
+  price       Decimal?
+  isActive    Boolean   @default(true)
+  isFeatured  Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  categoryId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("products")
 }

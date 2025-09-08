@@ -69,7 +69,7 @@ export default function HomePage() {
               href="/contact" 
               className="btn-primary bg-brand-accent hover:bg-brand-accent/90 text-white inline-block"
             >
-              {t('hero.cta')}
+              {t('hero.cta.contact')}
             </Link>
           </MotionFadeIn>
         </div>
