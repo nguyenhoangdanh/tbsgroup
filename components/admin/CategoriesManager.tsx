@@ -386,7 +386,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
           )}
           
           <Button
-            variant="primary"
+            variant="accent"
             onClick={() => setShowCreateModal(true)}
             icon={
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -399,24 +399,24 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="section-spacing">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Total Categories</p>
                 <p className="text-2xl font-bold text-slate-900">{total}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active</p>
@@ -424,15 +424,15 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
                   {categories.filter(c => c.status === 'ACTIVE').length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-success-light rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Draft</p>
@@ -440,15 +440,15 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
                   {categories.filter(c => c.status === 'DRAFT').length}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-warning-light rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Total Products</p>
@@ -456,8 +456,8 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
                   {categories.reduce((acc, c) => acc + (c._count?.products || 0), 0)}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
@@ -466,7 +466,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
         </div>
 
         {/* Search and Filters */}
-        <Card className="p-6">
+        <Card padding="md">
           <div className="flex items-center justify-between">
             <Input
               placeholder="Search categories..."
