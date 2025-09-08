@@ -424,7 +424,7 @@ const UsersManager: React.FC<UsersManagerProps> = ({ locale }) => {
         </div>
 
         {/* Search and Filters */}
-        <Card className="p-6">
+        <Card padding="md">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex-1 max-w-md">
               <SearchBox
@@ -434,7 +434,7 @@ const UsersManager: React.FC<UsersManagerProps> = ({ locale }) => {
                 className="w-full"
               />
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -452,7 +452,7 @@ const UsersManager: React.FC<UsersManagerProps> = ({ locale }) => {
         </Card>
 
         {/* Users Table */}
-        <Card>
+        <Card padding="md">
           {error && (
             <div className="p-4 bg-red-50 border-b border-red-200">
               <p className="text-sm text-red-600">{error}</p>
