@@ -402,7 +402,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="section-spacing">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-6">
