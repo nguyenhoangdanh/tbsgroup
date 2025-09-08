@@ -39,7 +39,91 @@
   },
   "about": {
     "title": "Về chúng tôi",
-    "description": "TBS Group Handbag Division - Chuyên sản xuất túi xách cao cấp với tay nghề thủ công tinh xảo và tầm nhìn toàn cầu. Chúng tôi cam kết mang đến những sản phẩm chất lượng với thiết kế tinh tế và bền vững."
+    "subtitle": "Khám phá câu chuyện và tầm nhìn của TBS Group Handbag Division",
+    "description": "TBS Group Handbag Division - Chuyên sản xuất túi xách cao cấp với tay nghề thủ công tinh xảo và tầm nhìn toàn cầu. Chúng tôi cam kết mang đến những sản phẩm chất lượng với thiết kế tinh tế và bền vững.",
+    "story": {
+      "title": "Câu chuyện của chúng tôi",
+      "paragraph1": "Được thành lập với sứ mệnh mang đến những sản phẩm túi xách cao cấp, TBS Group Handbag Division đã không ngừng phát triển và khẳng định vị thế trong ngành công nghiệp thời trang.",
+      "paragraph2": "Với đội ngũ thợ thủ công lành nghề và công nghệ hiện đại, chúng tôi tạo ra những sản phẩm không chỉ đẹp mắt mà còn bền vững và thân thiện với môi trường.",
+      "paragraph3": "Chúng tôi tin rằng mỗi chiếc túi xách không chỉ là phụ kiện mà còn là biểu tượng của phong cách và cá tính riêng biệt của mỗi người."
+    },
+    "mission": {
+      "title": "Sứ mệnh",
+      "description": "Mang đến những sản phẩm túi xách cao cấp với chất lượng vượt trội, thiết kế tinh tế và cam kết bền vững cho khách hàng trên toàn thế giới."
+    },
+    "vision": {
+      "title": "Tầm nhìn",
+      "description": "Trở thành thương hiệu túi xách hàng đầu được công nhận về chất lượng, sự sáng tạo và trách nhiệm xã hội trong ngành công nghiệp thời trang toàn cầu."
+    },
+    "values": {
+      "title": "Giá trị cốt lõi",
+      "subtitle": "Những nguyên tắc định hướng mọi hoạt động của chúng tôi",
+      "excellence": {
+        "title": "Xuất sắc",
+        "description": "Không ngừng nâng cao chất lượng và hoàn thiện trong từng sản phẩm"
+      },
+      "innovation": {
+        "title": "Sáng tạo",
+        "description": "Đổi mới thiết kế và công nghệ để đáp ứng nhu cầu thời đại"
+      },
+      "sustainability": {
+        "title": "Bền vững",
+        "description": "Cam kết với môi trường và trách nhiệm xã hội"
+      },
+      "integrity": {
+        "title": "Chính trực",
+        "description": "Minh bạch và trung thực trong mọi hoạt động kinh doanh"
+      }
+    },
+    "leadership": {
+      "title": "Đội ngũ lãnh đạo",
+      "subtitle": "Những người dẫn dắt TBS Group Handbag Division đến thành công",
+      "member1": {
+        "name": "Nguyễn Văn A",
+        "position": "Giám đốc điều hành",
+        "bio": "Với hơn 15 năm kinh nghiệm trong ngành thời trang cao cấp"
+      },
+      "member2": {
+        "name": "Trần Thị B",
+        "position": "Giám đốc thiết kế",
+        "bio": "Chuyên gia thiết kế với nhiều giải thượng quốc tế"
+      },
+      "member3": {
+        "name": "Lê Văn C",
+        "position": "Giám đốc sản xuất",
+        "bio": "Chuyên gia về quy trình sản xuất và kiểm soát chất lượng"
+      }
+    }
+  },
+  "categories": {
+    "title": "Danh mục sản phẩm",
+    "subtitle": "Khám phá các bộ sưu tập túi xách cao cấp của chúng tôi",
+    "products": "sản phẩm",
+    "viewProducts": "Xem sản phẩm",
+    "noCategories": "Chưa có danh mục nào",
+    "noCategoriesDesc": "Hiện tại chưa có danh mục sản phẩm nào được hiển thị.",
+    "noProducts": "Chưa có sản phẩm nào",
+    "noProductsDesc": "Danh mục này hiện chưa có sản phẩm nào.",
+    "contactUs": "Liên hệ với chúng tôi",
+    "exploreMore": "Khám phá thêm",
+    "exploreMoreDesc": "Khám phá các danh mục sản phẩm khác của chúng tôi",
+    "viewAllCategories": "Xem tất cả danh mục",
+    "cta": {
+      "title": "Cần tư vấn sản phẩm?",
+      "description": "Liên hệ với chúng tôi để được tư vấn và hỗ trợ tìm sản phẩm phù hợp nhất.",
+      "button": "Liên hệ ngay"
+    }
+  },
+  "products": {
+    "title": "Sản phẩm",
+    "featured": "Nổi bật",
+    "contactForPrice": "Liên hệ",
+    "viewDetails": "Xem chi tiết",
+    "requestConsultation": "Yêu cầu tư vấn",
+    "generalInquiry": "Liên hệ chung",
+    "specifications": "Thông số kỹ thuật",
+    "description": "Mô tả sản phẩm",
+    "relatedProducts": "Sản phẩm liên quan"
   },
   "collections": {
     "title": "Bộ sưu tập nổi bật",
