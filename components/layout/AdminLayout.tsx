@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+'use client';
+
 import { AdminLayoutProps } from '@/types/admin';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
@@ -53,7 +55,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         />
 
         {/* Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pt-16">
           <div className="container-responsive py-6">
             {children}
           </div>

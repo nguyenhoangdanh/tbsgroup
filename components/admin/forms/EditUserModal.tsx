@@ -168,19 +168,19 @@ export default function EditUserModal({
 
         {/* Account Information */}
         <div className="bg-slate-50 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-slate-900 mb-2">Account Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900 mb-2">Account Information</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-600">Email:</span>
-              <span className="text-slate-900 font-medium">{user.email}</span>
+              <span className="text-neutral-600">Email:</span>
+              <span className="text-neutral-900 font-medium">{user.email}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Created:</span>
-              <span className="text-slate-900">{new Date(user.createdAt).toLocaleDateString()}</span>
+              <span className="text-neutral-600">Created:</span>
+              <span className="text-neutral-900">{new Date(user.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Last Updated:</span>
-              <span className="text-slate-900">{new Date(user.updatedAt).toLocaleDateString()}</span>
+              <span className="text-neutral-600">Last Updated:</span>
+              <span className="text-neutral-900">{new Date(user.updatedAt).toLocaleDateString()}</span>
             </div>
           </div>
           <p className="text-xs text-slate-500 mt-2">
@@ -190,7 +190,7 @@ export default function EditUserModal({
 
         {/* Personal Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Personal Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Personal Information</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -215,7 +215,7 @@ export default function EditUserModal({
 
         {/* Permissions & Status */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Permissions & Status</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Permissions & Status</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -268,14 +268,14 @@ export default function EditUserModal({
         </div>
 
         {/* Password Change Note */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-accent-light border border-slate-200 rounded-lg p-4">
           <div className="flex items-start">
-            <svg className="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-accent mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-sm font-medium text-blue-800">Password Management</p>
-              <p className="text-sm text-blue-700 mt-1">
+              <p className="text-sm font-medium text-accent">Password Management</p>
+              <p className="text-sm text-accent mt-1">
                 To change the user's password, use the separate "Change Password" option from the user actions menu. 
                 This ensures proper security protocols are followed.
               </p>
@@ -291,7 +291,7 @@ export default function EditUserModal({
             </svg>
             <div>
               <p className="text-sm font-medium text-slate-800">Audit Trail</p>
-              <p className="text-sm text-slate-600 mt-1">
+              <p className="text-sm text-neutral-600 mt-1">
                 All user modifications are logged for security and compliance purposes. 
                 The change will be recorded with timestamp and the administrator who made the change.
               </p>
@@ -311,7 +311,7 @@ export default function EditUserModal({
           
           <Button
             type="submit"
-            variant="primary"
+            variant="accent"
             isLoading={isLoading}
             disabled={isLoading}
           >

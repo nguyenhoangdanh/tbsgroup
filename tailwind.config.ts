@@ -10,11 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: '#059669', // Emerald green - main brand color
-          'primary-dark': '#047857', // Darker emerald for hover states
-          'primary-light': '#10B981', // Lighter emerald for accents
-          secondary: '#065F46', // Deep green
-          accent: '#34D399', // Light green accent
+          primary: '#0B6A2F',
+          'primary-dark': '#06441F',
+          'primary-light': '#2E8B57',
+          secondary: '#145C34',
+          accent: '#F2C94C',
           neutral: {
             50: '#F8FAFC',
             100: '#F1F5F9',
@@ -73,7 +73,7 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-green': 'linear-gradient(135deg, #059669, #10B981, #34D399)',
+        'gradient-green': 'linear-gradient(135deg, #0B6A2F, #2E8B57, #F2C94C)',
       },
     },
   },

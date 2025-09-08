@@ -184,7 +184,7 @@ export default function CreateUserModal({
 
         {/* Personal Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Personal Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Personal Information</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -209,7 +209,7 @@ export default function CreateUserModal({
 
         {/* Account Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Account Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Account Information</h4>
           
           <Input
             label="Email Address *"
@@ -236,7 +236,7 @@ export default function CreateUserModal({
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-neutral-400 hover:text-neutral-600"
                 >
                   {showPassword ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -259,7 +259,7 @@ export default function CreateUserModal({
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mt-2"
               >
-                <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
+                <div className="flex items-center justify-between text-xs text-neutral-600 mb-1">
                   <span>Password Strength</span>
                   <span className={`font-medium ${passwordStrength >= 75 ? 'text-green-600' : passwordStrength >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
                     {getPasswordStrengthLabel()}
@@ -291,7 +291,7 @@ export default function CreateUserModal({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-neutral-400 hover:text-neutral-600"
               >
                 {showConfirmPassword ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -310,7 +310,7 @@ export default function CreateUserModal({
 
         {/* Permissions & Status */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Permissions & Status</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Permissions & Status</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -356,14 +356,14 @@ export default function CreateUserModal({
         </div>
 
         {/* Security Note */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-accent-light border border-slate-200 rounded-lg p-4">
           <div className="flex items-start">
-            <svg className="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-accent mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-sm font-medium text-blue-800">Security Guidelines</p>
-              <ul className="text-sm text-blue-700 mt-1 list-disc list-inside space-y-1">
+              <p className="text-sm font-medium text-accent">Security Guidelines</p>
+              <ul className="text-sm text-accent mt-1 list-disc list-inside space-y-1">
                 <li>The user will receive login credentials via email</li>
                 <li>They should change their password upon first login</li>
                 <li>Super Admin role grants full system access - use carefully</li>
@@ -385,7 +385,7 @@ export default function CreateUserModal({
           
           <Button
             type="submit"
-            variant="primary"
+            variant="accent"
             isLoading={isLoading}
             disabled={isLoading}
           >

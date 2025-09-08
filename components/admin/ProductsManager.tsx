@@ -411,7 +411,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
       actions={
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-100 rounded-lg p-1">
+          <div className="flex items-center bg-neutral-100 rounded-lg p-1">
             <Button
               variant={viewMode === 'table' ? 'primary' : 'ghost'}
               size="sm"
@@ -450,7 +450,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
           )}
           
           <Button
-            variant="primary"
+            variant="accent"
             onClick={() => setShowCreateModal(true)}
             icon={
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -463,10 +463,10 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="section-spacing">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Total Products</p>
@@ -480,7 +480,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active</p>
@@ -496,7 +496,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Featured</p>
@@ -512,7 +512,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Draft</p>
@@ -530,7 +530,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
         </div>
 
         {/* Search and Filters */}
-        <Card className="p-6">
+        <Card padding="md">
           <div className="flex items-center justify-between">
             <Input
               placeholder="Search products..."

@@ -160,7 +160,7 @@ const UserForm: React.FC<UserFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Basic Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Basic Information</h4>
           
           <Input
             label="Email Address"
@@ -212,14 +212,14 @@ const UserForm: React.FC<UserFormProps> = ({
         {/* Password Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-slate-900">
+            <h4 className="text-sm font-medium text-neutral-900">
               {user ? 'Change Password (Optional)' : 'Password'}
             </h4>
             {user && (
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-accent hover:text-accent-light"
               >
                 {showPassword ? 'Hide' : 'Change Password'}
               </button>
@@ -264,7 +264,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
         {/* Role and Status */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Permissions & Status</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Permissions & Status</h4>
           
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -291,7 +291,7 @@ const UserForm: React.FC<UserFormProps> = ({
                     >
                       {role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
                     </Badge>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-neutral-600">
                       {role === 'SUPER_ADMIN' 
                         ? 'Full access to all features'
                         : 'View-only access to most features'
@@ -305,7 +305,7 @@ const UserForm: React.FC<UserFormProps> = ({
               <p className="mt-1 text-sm text-red-600">{errors.role}</p>
             )}
             {isEditingSelf && (
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-neutral-600">
                 You cannot change your own role
               </p>
             )}
@@ -321,11 +321,11 @@ const UserForm: React.FC<UserFormProps> = ({
                   isActive: e.target.checked 
                 }))}
                 disabled={isEditingSelf}
-                className="rounded border-slate-300 text-slate-600"
+                className="rounded border-slate-300 text-neutral-600"
               />
               <span className="text-sm font-medium text-slate-700">Active Account</span>
             </label>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-neutral-600 mt-1">
               {isEditingSelf 
                 ? 'You cannot deactivate your own account'
                 : 'Inactive users cannot sign in'
@@ -339,7 +339,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
         {/* Warning for editing self */}
         {isEditingSelf && (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="p-4 bg-warning-light border border-slate-200 rounded-lg">
             <div className="flex">
               <svg className="w-5 h-5 text-yellow-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -368,7 +368,7 @@ const UserForm: React.FC<UserFormProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
+            variant="accent"
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
