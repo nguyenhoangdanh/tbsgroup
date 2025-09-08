@@ -22,7 +22,7 @@ export interface UploadResponse {
   publicUrl: string;
 }
 
-export function generateKey(filename: string): string {
+export function generateKey(filename: string, type: 'inquiry' | 'category' | 'product' = 'inquiry'): string {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 8);
   const slug = filename
@@ -31,7 +31,12 @@ export function generateKey(filename: string): string {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
   
-  return `inquiries/${timestamp}-${random}-${slug}`;
+  // Organize files by type as specified in problem statement
+  const typeFolder = type === 'inquiry' ? 'inquiries' : 
+                    type === 'category' ? 'categories' : 
+                    'products';
+  
+  return `${typeFolder}/${timestamp}-${random}-${slug}`;
 }
 
 export async function createPresignedUrl(
@@ -53,9 +58,16 @@ export function getPublicUrl(key: string): string {
 }
 
 export function validateImageType(contentType: string): boolean {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-  return allowedTypes.includes(contentType);
+  const allowedTypes = [
+    'image/jpeg', 
+    'image/jpg',
+    'image/png', 
+    'image/webp',
+    'image/gif' // Added GIF support
+  ];
+  return allowedTypes.includes(contentType.toLowerCase());
 }
 
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-export const MAX_FILES = 5;
+export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
+export const MAX_FILES = 10; // Increased to 10 files max as per requirements
+export const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];

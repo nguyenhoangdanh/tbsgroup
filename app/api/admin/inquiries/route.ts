@@ -2,56 +2,83 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { paginationSchema } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
+    // Check authentication (both ADMIN and SUPER_ADMIN can view inquiries)
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        }
+      }, { status: 401 });
     }
 
-    // Parse query parameters
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '20');
-    const sortOrder = searchParams.get('sort') || 'desc';
-
-    // Validate pagination parameters
-    const validatedPage = Math.max(1, page);
-    const validatedPageSize = Math.min(Math.max(1, pageSize), 100);
-    const skip = (validatedPage - 1) * validatedPageSize;
-
-    // Get total count
-    const total = await prisma.customerInquiry.count();
-
-    // Get inquiries with pagination
-    const inquiries = await prisma.customerInquiry.findMany({
-      orderBy: {
-        createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
-      },
-      skip,
-      take: validatedPageSize,
-      select: {
-        id: true,
-        email: true,
-        content: true,
-        imageUrls: true,
-        createdAt: true,
-      },
+    const { page, pageSize, search, sort, order } = paginationSchema.parse({
+      page: searchParams.get('page') || '1',
+      pageSize: searchParams.get('pageSize') || '20',
+      search: searchParams.get('search'),
+      sort: searchParams.get('sort') || 'createdAt',
+      order: searchParams.get('order') || 'desc',
     });
 
+    const skip = (page - 1) * pageSize;
+
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { email: { contains: search, mode: 'insensitive' } },
+        { content: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const [inquiries, total] = await Promise.all([
+      prisma.customerInquiry.findMany({
+        where,
+        orderBy: { [sort]: order },
+        skip,
+        take: pageSize,
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              images: true,
+            }
+          }
+        }
+      }),
+      prisma.customerInquiry.count({ where }),
+    ]);
+
     return NextResponse.json({
+      success: true,
       data: inquiries,
-      total,
-      page: validatedPage,
-      pageSize: validatedPageSize,
-      totalPages: Math.ceil(total / validatedPageSize),
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        hasNext: page * pageSize < total,
+      },
     });
   } catch (error) {
     console.error('Admin inquiries fetch error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch inquiries' },
+      { 
+        success: false,
+        error: {
+          code: 'FETCH_ERROR',
+          message: 'Failed to fetch inquiries'
+        }
+      },
       { status: 500 }
     );
   }

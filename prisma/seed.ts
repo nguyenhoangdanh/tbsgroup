@@ -327,7 +327,6 @@ async function main() {
   console.log(`SuperAdmin: ${superAdminEmail} / ${superAdminPassword}`);
   console.log(`Admin: ${adminEmail} / ${adminPassword}`);
 }
-}
 
 main()
   .catch((e) => {
