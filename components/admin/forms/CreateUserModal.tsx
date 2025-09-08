@@ -363,7 +363,7 @@ export default function CreateUserModal({
             </svg>
             <div>
               <p className="text-sm font-medium text-accent">Security Guidelines</p>
-              <ul className="text-sm text-blue-700 mt-1 list-disc list-inside space-y-1">
+              <ul className="text-sm text-accent mt-1 list-disc list-inside space-y-1">
                 <li>The user will receive login credentials via email</li>
                 <li>They should change their password upon first login</li>
                 <li>Super Admin role grants full system access - use carefully</li>
