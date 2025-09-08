@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+'use client';
+
 import { AdminLayoutProps } from '@/types/admin';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
