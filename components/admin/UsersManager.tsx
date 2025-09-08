@@ -349,73 +349,73 @@ const UsersManager: React.FC<UsersManagerProps> = ({ locale }) => {
         </div>
       }
     >
-      <div className="space-y-6">
+      <div className="section-spacing">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Total Users</p>
-                <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+                <p className="text-sm font-medium text-neutral-600">Total Users</p>
+                <p className="text-2xl font-bold text-neutral-900">{stats.total}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center text-white">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Active</p>
-                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+                <p className="text-sm font-medium text-neutral-600">Active</p>
+                <p className="text-2xl font-bold text-success">{stats.active}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-success-light rounded-lg flex items-center justify-center text-success">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Inactive</p>
-                <p className="text-2xl font-bold text-slate-600">{stats.inactive}</p>
+                <p className="text-sm font-medium text-neutral-600">Inactive</p>
+                <p className="text-2xl font-bold text-neutral-700">{stats.inactive}</p>
               </div>
-              <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center text-neutral-700">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Super Admins</p>
-                <p className="text-2xl font-bold text-amber-600">{stats.superAdmins}</p>
+                <p className="text-sm font-medium text-neutral-600">Super Admins</p>
+                <p className="text-2xl font-bold text-accent">{stats.superAdmins}</p>
               </div>
-              <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-accent-light rounded-lg flex items-center justify-center text-accent">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Admins</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.admins}</p>
+                <p className="text-sm font-medium text-neutral-600">Admins</p>
+                <p className="text-2xl font-bold text-neutral-800">{stats.admins}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center text-white">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
