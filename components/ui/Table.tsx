@@ -256,7 +256,7 @@ function Table<T extends Record<string, any>>({
                             variant={action.variant || 'ghost'}
                             size="sm"
                             onClick={(e) => {
-                              e.stopPropagation();
+                              e?.stopPropagation();
                               action.onClick(item);
                             }}
                             disabled={action.disabled?.(item)}

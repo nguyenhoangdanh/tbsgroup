@@ -18,7 +18,7 @@ export interface ButtonProps extends BaseComponentProps {
   fullWidth?: boolean;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent) => void;
   type?: 'button' | 'submit' | 'reset';
 }
 
@@ -305,7 +305,7 @@ export interface FormFieldProps extends BaseComponentProps {
 // Icon button types
 export interface IconButtonProps extends BaseComponentProps {
   icon: ReactNode;
-  onClick?: () => void;
+  onClick?: (event?: React.MouseEvent) => void;
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
