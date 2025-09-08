@@ -70,7 +70,7 @@ export interface AdminLayoutProps {
 }
 
 export interface AdminSidebarProps {
-  isCollapsed: boolean;
+  isOpen: boolean;
   onToggle: () => void;
   currentPath: string;
   user: AdminUser;
@@ -82,7 +82,7 @@ export interface AdminHeaderProps {
   actions?: ReactNode;
   user: AdminUser;
   onSidebarToggle: () => void;
-  onUserMenuClick: () => void;
+  sidebarOpen?: boolean;
 }
 
 export interface UserMenuProps {

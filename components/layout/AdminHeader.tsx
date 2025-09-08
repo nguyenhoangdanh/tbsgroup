@@ -11,7 +11,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   actions,
   user,
   onSidebarToggle,
-  onUserMenuClick
+  sidebarOpen
 }) => {
   return (
     <header className="header sticky top-0 z-20 bg-white px-6 py-4">
