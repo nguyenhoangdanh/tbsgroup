@@ -10,11 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: '#0F172A',
-          'primary-dark': '#020617',
-          'primary-light': '#1E293B',
-          secondary: '#334155',
-          accent: '#C0822C',
+          primary: '#0B6A2F',
+          'primary-dark': '#06441F',
+          'primary-light': '#2E8B57',
+          secondary: '#145C34',
+          accent: '#F2C94C',
           neutral: {
             50: '#F8FAFC',
             100: '#F1F5F9',
