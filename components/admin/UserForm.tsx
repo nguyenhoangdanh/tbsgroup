@@ -291,7 +291,7 @@ const UserForm: React.FC<UserFormProps> = ({
                     >
                       {role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
                     </Badge>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-neutral-600">
                       {role === 'SUPER_ADMIN' 
                         ? 'Full access to all features'
                         : 'View-only access to most features'
@@ -321,7 +321,7 @@ const UserForm: React.FC<UserFormProps> = ({
                   isActive: e.target.checked 
                 }))}
                 disabled={isEditingSelf}
-                className="rounded border-slate-300 text-slate-600"
+                className="rounded border-slate-300 text-neutral-600"
               />
               <span className="text-sm font-medium text-slate-700">Active Account</span>
             </label>
