@@ -1,4 +1,4 @@
-import { InquiriesPage } from '@/components/InquiriesPage';
+import InquiriesViewer from '@/components/admin/InquiriesViewer';
 
 interface PageProps {
   params: {
@@ -7,5 +7,5 @@ interface PageProps {
 }
 
 export default function AdminInquiriesPage({ params }: PageProps) {
-  return <InquiriesPage locale={params.locale} />;
+  return <InquiriesViewer locale={params.locale} />;
 }

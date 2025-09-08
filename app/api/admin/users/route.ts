@@ -2,46 +2,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { adminUserSchema, paginationSchema } from '@/lib/validations';
 import bcrypt from 'bcryptjs';
-
-// Check if user is SuperAdmin
-async function checkSuperAdminAuth() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'SUPER_ADMIN') {
-    return false;
-  }
-  return true;
-}
 
 export async function GET(request: NextRequest) {
   try {
-    // Check SuperAdmin authorization (only SuperAdmin can manage admin users)
-    const isAuthorized = await checkSuperAdminAuth();
-    if (!isAuthorized) {
+    // Check authentication and authorization
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'SUPER_ADMIN') {
       return NextResponse.json({ 
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Super Admin access required'
+          code: 'FORBIDDEN',
+          message: 'Super admin access required'
         }
       }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);
-    
-    // Parse query parameters directly without schema validation to avoid null issues
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '20');
-    const search = searchParams.get('search');
-    const status = searchParams.get('status');
-    const sort = searchParams.get('sort') || 'createdAt';
-    const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc';
+    const search = searchParams.get('search') || '';
 
     const skip = (page - 1) * pageSize;
 
+    // Build where clause
     const where: any = {};
-
+    
     if (search) {
       where.OR = [
         { email: { contains: search, mode: 'insensitive' } },
@@ -50,50 +36,48 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    if (status) {
-      where.status = status;
-    }
+    // Get total count
+    const total = await prisma.adminUser.count({ where });
 
-    const [users, total] = await Promise.all([
-      prisma.adminUser.findMany({
-        where,
-        orderBy: { [sort]: order },
-        skip,
-        take: pageSize,
-        select: {
-          id: true,
-          email: true,
-          role: true,
-          status: true,
-          firstName: true,
-          lastName: true,
-          createdAt: true,
-          updatedAt: true,
-          createdBy: true,
-        }
-      }),
-      prisma.adminUser.count({ where }),
-    ]);
+    // Get users
+    const users = await prisma.adminUser.findMany({
+      where,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize,
+    });
+
+    const totalPages = Math.ceil(total / pageSize);
 
     return NextResponse.json({
       success: true,
       data: users,
       meta: {
-        total,
         page,
         pageSize,
-        totalPages: Math.ceil(total / pageSize),
-        hasNext: page * pageSize < total,
-      },
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
     });
   } catch (error) {
-    console.error('Admin users fetch error:', error);
+    console.error('Users fetch error:', error);
     return NextResponse.json(
       { 
         success: false,
         error: {
           code: 'FETCH_ERROR',
-          message: 'Failed to fetch admin users'
+          message: 'Failed to fetch users'
         }
       },
       { status: 500 }
@@ -103,113 +87,106 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check SuperAdmin authorization
+    // Check authentication and authorization
     const session = await getServerSession(authOptions);
-    const isAuthorized = await checkSuperAdminAuth();
-    if (!isAuthorized) {
+    if (!session || session.user.role !== 'SUPER_ADMIN') {
       return NextResponse.json({ 
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Super Admin access required'
+          code: 'FORBIDDEN',
+          message: 'Super admin access required'
         }
       }, { status: 403 });
     }
 
     const body = await request.json();
-    const validatedData = adminUserSchema.parse(body);
+    const { email, firstName, lastName, role, password } = body;
 
-    if (!validatedData.password) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Password is required for new users'
-          }
-        },
-        { status: 400 }
-      );
+    // Validate required fields
+    if (!email || !firstName || !lastName || !password) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Email, first name, last name, and password are required'
+        }
+      }, { status: 400 });
     }
 
-    // Check if email already exists
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'INVALID_EMAIL',
+          message: 'Please provide a valid email address'
+        }
+      }, { status: 400 });
+    }
+
+    // Validate password strength
+    if (password.length < 8) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'WEAK_PASSWORD',
+          message: 'Password must be at least 8 characters long'
+        }
+      }, { status: 400 });
+    }
+
+    // Check if user already exists
     const existingUser = await prisma.adminUser.findUnique({
-      where: { email: validatedData.email },
+      where: { email }
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'DUPLICATE_EMAIL',
-            message: 'Admin user with this email already exists'
-          }
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'USER_EXISTS',
+          message: 'A user with this email already exists'
+        }
+      }, { status: 400 });
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(validatedData.password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Create user
     const user = await prisma.adminUser.create({
       data: {
-        ...validatedData,
+        email,
+        firstName,
+        lastName,
         password: hashedPassword,
-        createdBy: session!.user.id,
+        role: role || 'ADMIN',
       },
       select: {
         id: true,
         email: true,
-        role: true,
-        status: true,
         firstName: true,
         lastName: true,
+        role: true,
         createdAt: true,
         updatedAt: true,
-        createdBy: true,
       }
     });
 
     return NextResponse.json({
       success: true,
-      data: user,
-      message: 'Admin user created successfully'
+      data: user
     }, { status: 201 });
+
   } catch (error) {
-    console.error('Admin user creation error:', error);
-    if (error instanceof Error && 'code' in error && error.code === 'P2002') {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'DUPLICATE_EMAIL',
-            message: 'Admin user with this email already exists'
-          }
-        },
-        { status: 400 }
-      );
-    }
-    if (error && typeof error === 'object' && 'errors' in error) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Validation failed',
-            details: error.errors
-          }
-        },
-        { status: 400 }
-      );
-    }
+    console.error('User creation error:', error);
     return NextResponse.json(
       { 
         success: false,
         error: {
           code: 'CREATE_ERROR',
-          message: 'Failed to create admin user'
+          message: 'Failed to create user'
         }
       },
       { status: 500 }

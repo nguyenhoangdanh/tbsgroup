@@ -15,73 +15,72 @@ async function checkSuperAdminAuth() {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication (both ADMIN and SUPER_ADMIN can view)
+    // Check authentication
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        }
+      }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    
-    // Parse query parameters directly without schema validation to avoid null issues
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '20');
-    const search = searchParams.get('search');
-    const status = searchParams.get('status');
-    const sort = searchParams.get('sort') || 'createdAt';
-    const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc';
+    const search = searchParams.get('search') || '';
+    const status = searchParams.get('status') || '';
 
     const skip = (page - 1) * pageSize;
 
+    // Build where clause
     const where: any = {};
     
     if (search) {
       where.OR = [
-        { name: { path: ['vi'], string_contains: search } },
-        { name: { path: ['en'], string_contains: search } },
-        { name: { path: ['id'], string_contains: search } },
-        { description: { path: ['vi'], string_contains: search } },
-        { description: { path: ['en'], string_contains: search } },
-        { description: { path: ['id'], string_contains: search } },
+        { slug: { contains: search, mode: 'insensitive' } },
+        // For JSON fields, we need to use raw SQL or specific search methods
       ];
     }
 
-    if (status) {
+    if (status && status !== 'all') {
       where.status = status;
     }
 
-    const orderBy: any = {};
-    if (sort === 'name') {
-      orderBy.name = { path: ['vi'], sort: order };
-    } else {
-      orderBy[sort] = order;
-    }
+    // Get total count
+    const total = await prisma.category.count({ where });
 
-    const [categories, total] = await Promise.all([
-      prisma.category.findMany({
-        where,
-        orderBy,
-        skip,
-        take: pageSize,
-        include: {
-          _count: {
-            select: { products: true }
-          }
+    // Get categories with product count
+    const categories = await prisma.category.findMany({
+      where,
+      include: {
+        _count: {
+          select: { products: true }
         }
-      }),
-      prisma.category.count({ where }),
-    ]);
+      },
+      orderBy: [
+        { sortOrder: 'asc' },
+        { createdAt: 'desc' }
+      ],
+      skip,
+      take: pageSize,
+    });
+
+    const totalPages = Math.ceil(total / pageSize);
 
     return NextResponse.json({
       success: true,
       data: categories,
       meta: {
-        total,
         page,
         pageSize,
-        totalPages: Math.ceil(total / pageSize),
-        hasNext: page * pageSize < total,
-      },
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
     });
   } catch (error) {
     console.error('Categories fetch error:', error);
@@ -100,41 +99,57 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check SuperAdmin authorization
-    const isAuthorized = await checkSuperAdminAuth();
-    if (!isAuthorized) {
+    // Check authentication and authorization
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'SUPER_ADMIN') {
       return NextResponse.json({ 
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'Super Admin access required'
+          code: 'FORBIDDEN',
+          message: 'Super admin access required'
         }
       }, { status: 403 });
     }
 
     const body = await request.json();
-    const validatedData = categorySchema.parse(body);
+    const { name, slug, description, thumbnail, status, sortOrder } = body;
+
+    // Validate required fields
+    if (!name?.vi || !name?.en || !name?.id || !slug) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Name in all languages and slug are required'
+        }
+      }, { status: 400 });
+    }
 
     // Check if slug already exists
     const existingCategory = await prisma.category.findUnique({
-      where: { slug: validatedData.slug },
+      where: { slug }
     });
 
     if (existingCategory) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'DUPLICATE_SLUG',
-            message: 'Category with this slug already exists'
-          }
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'DUPLICATE_SLUG',
+          message: 'A category with this slug already exists'
+        }
+      }, { status: 400 });
     }
 
+    // Create category
     const category = await prisma.category.create({
-      data: validatedData,
+      data: {
+        name,
+        slug,
+        description: description || null,
+        thumbnail: thumbnail || null,
+        status: status || 'ACTIVE',
+        sortOrder: sortOrder || 0,
+      },
       include: {
         _count: {
           select: { products: true }
@@ -144,36 +159,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: category,
-      message: 'Category created successfully'
+      data: category
     }, { status: 201 });
+
   } catch (error) {
     console.error('Category creation error:', error);
-    if (error instanceof Error && 'code' in error && error.code === 'P2002') {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'DUPLICATE_SLUG',
-            message: 'Category with this slug already exists'
-          }
-        },
-        { status: 400 }
-      );
-    }
-    if (error && typeof error === 'object' && 'errors' in error) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Validation failed',
-            details: error.errors
-          }
-        },
-        { status: 400 }
-      );
-    }
     return NextResponse.json(
       { 
         success: false,

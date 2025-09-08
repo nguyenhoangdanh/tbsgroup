@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -46,6 +47,12 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    active: 0,
+    inactive: 0,
+    draft: 0
+  });
 
   // Check if user is SuperAdmin
   useEffect(() => {
@@ -82,8 +89,20 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
 
       const data = await response.json();
       setCategories(data.data || []);
-      setTotalPages(data.totalPages || 1);
-      setTotal(data.total || 0);
+      setTotalPages(data.meta?.totalPages || 1);
+      setTotal(data.meta?.total || 0);
+      
+      // Calculate stats
+      const active = data.data?.filter((cat: Category) => cat.status === 'ACTIVE').length || 0;
+      const inactive = data.data?.filter((cat: Category) => cat.status === 'INACTIVE').length || 0;
+      const draft = data.data?.filter((cat: Category) => cat.status === 'DRAFT').length || 0;
+      
+      setStats({
+        total: data.meta?.total || 0,
+        active,
+        inactive,
+        draft
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -96,6 +115,54 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
   }, [page, pageSize, search]);
 
   // Handlers
+  const handleCreate = async (data: any) => {
+    try {
+      const response = await fetch('/api/admin/categories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to create category');
+      }
+
+      await fetchCategories();
+      setShowCreateModal(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create category');
+      throw err;
+    }
+  };
+
+  const handleEdit = async (data: any) => {
+    if (!editingCategory) return;
+
+    try {
+      const response = await fetch(`/api/admin/categories/${editingCategory.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to update category');
+      }
+
+      await fetchCategories();
+      setEditingCategory(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update category');
+      throw err;
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) {
       return;
@@ -108,7 +175,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete category');
+        throw new Error(errorData.error?.message || 'Failed to delete category');
       }
 
       fetchCategories();

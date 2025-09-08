@@ -1,4 +1,4 @@
-import { UsersPage } from '@/components/UsersPage';
+import UsersManager from '@/components/admin/UsersManager';
 
 interface PageProps {
   params: {
@@ -7,5 +7,5 @@ interface PageProps {
 }
 
 export default function AdminUsersPage({ params }: PageProps) {
-  return <UsersPage locale={params.locale} />;
+  return <UsersManager locale={params.locale} />;
 }

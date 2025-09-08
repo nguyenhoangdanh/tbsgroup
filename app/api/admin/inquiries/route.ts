@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { paginationSchema } from '@/lib/validations';
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication (both ADMIN and SUPER_ADMIN can view inquiries)
+    // Check authentication
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ 
@@ -19,58 +18,65 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const { page, pageSize, search, sort, order } = paginationSchema.parse({
-      page: searchParams.get('page') || '1',
-      pageSize: searchParams.get('pageSize') || '20',
-      search: searchParams.get('search'),
-      sort: searchParams.get('sort') || 'createdAt',
-      order: searchParams.get('order') || 'desc',
-    });
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const search = searchParams.get('search') || '';
+    const status = searchParams.get('status') || '';
 
     const skip = (page - 1) * pageSize;
 
+    // Build where clause
     const where: any = {};
-
+    
     if (search) {
       where.OR = [
+        { fullName: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } },
-        { content: { contains: search, mode: 'insensitive' } },
+        { subject: { contains: search, mode: 'insensitive' } },
+        { company: { contains: search, mode: 'insensitive' } },
       ];
     }
 
-    const [inquiries, total] = await Promise.all([
-      prisma.customerInquiry.findMany({
-        where,
-        orderBy: { [sort]: order },
-        skip,
-        take: pageSize,
-        include: {
-          product: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-              images: true,
-            }
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    // Get total count
+    const total = await prisma.customerInquiry.count({ where });
+
+    // Get inquiries with product details
+    const inquiries = await prisma.customerInquiry.findMany({
+      where,
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
           }
         }
-      }),
-      prisma.customerInquiry.count({ where }),
-    ]);
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize,
+    });
+
+    const totalPages = Math.ceil(total / pageSize);
 
     return NextResponse.json({
       success: true,
       data: inquiries,
       meta: {
-        total,
         page,
         pageSize,
-        totalPages: Math.ceil(total / pageSize),
-        hasNext: page * pageSize < total,
-      },
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
     });
   } catch (error) {
-    console.error('Admin inquiries fetch error:', error);
+    console.error('Inquiries fetch error:', error);
     return NextResponse.json(
       { 
         success: false,

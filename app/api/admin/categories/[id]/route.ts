@@ -33,15 +33,6 @@ export async function GET(
     const category = await prisma.category.findUnique({
       where: { id: params.id },
       include: {
-        products: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            status: true,
-          }
-        },
         _count: {
           select: { products: true }
         }
@@ -49,22 +40,20 @@ export async function GET(
     });
 
     if (!category) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: 'Category not found'
-          }
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Category not found'
+        }
+      }, { status: 404 });
     }
 
     return NextResponse.json({
       success: true,
       data: category
     });
+
   } catch (error) {
     console.error('Category fetch error:', error);
     return NextResponse.json(
@@ -106,16 +95,13 @@ export async function PUT(
     });
 
     if (!existingCategory) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: 'Category not found'
-          }
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Category not found'
+        }
+      }, { status: 404 });
     }
 
     // Check if slug already exists (if updating slug)
@@ -125,16 +111,13 @@ export async function PUT(
       });
 
       if (categoryWithSlug) {
-        return NextResponse.json(
-          { 
-            success: false,
-            error: {
-              code: 'DUPLICATE_SLUG',
-              message: 'Category with this slug already exists'
-            }
-          },
-          { status: 400 }
-        );
+        return NextResponse.json({
+          success: false,
+          error: {
+            code: 'DUPLICATE_SLUG',
+            message: 'Category with this slug already exists'
+          }
+        }, { status: 400 });
       }
     }
 
@@ -211,30 +194,24 @@ export async function DELETE(
     });
 
     if (!existingCategory) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'NOT_FOUND',
-            message: 'Category not found'
-          }
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Category not found'
+        }
+      }, { status: 404 });
     }
 
     // Check if category has products
     if (existingCategory._count.products > 0) {
-      return NextResponse.json(
-        { 
-          success: false,
-          error: {
-            code: 'HAS_PRODUCTS',
-            message: 'Cannot delete category with existing products'
-          }
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'HAS_PRODUCTS',
+          message: 'Cannot delete category with existing products'
+        }
+      }, { status: 400 });
     }
 
     await prisma.category.delete({

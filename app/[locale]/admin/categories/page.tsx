@@ -1,4 +1,4 @@
-import CategoriesManager from '@/components/admin/CategoriesManager';
+import CategoriesManager from '@/components/admin/CategoriesManagerComplete';
 
 interface PageProps {
   params: {

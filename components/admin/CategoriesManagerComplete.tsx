@@ -1,53 +1,45 @@
-"use client"
+"use client";
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import ProductForm from './ProductForm';
-
-interface ProductsManagerProps {
-  locale: string;
-}
+import { debounce } from '@/lib/utils';
 import { getTranslatedContent, MultilingualContent } from '@/lib/utils/multilingual';
-import { debounce, formatPrice } from '@/lib/utils';
-import AdminLayout from '../layout/AdminLayout';
-import Table from '../ui/Table';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Badge from '../ui/Badge';
-import Card from '../ui/Card';
-import Modal from '../ui/Modal';
-import { EmptyTableState } from '../ui/EmptyState';
+import { CategoriesManagerProps } from '@/types/admin';
 import { TableColumn } from '@/types/ui';
+import AdminLayout from '@/components/layout/AdminLayout';
+import CategoryForm from './CategoryForm';
+import {
+  Card,
+  Table,
+  Button,
+  Badge,
+  Loading,
+  EmptyTableState,
+  SearchBox
+} from '@/components/ui';
 
-interface Product {
+interface Category {
   id: string;
   name: MultilingualContent;
   slug: string;
   description?: MultilingualContent;
-  shortDesc?: MultilingualContent;
-  price?: number;
-  originalPrice?: number;
-  images: string[];
+  thumbnail?: string;
   status: 'ACTIVE' | 'INACTIVE' | 'DRAFT';
-  featured: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
-  categoryId: string;
-  category: {
-    id: string;
-    name: MultilingualContent;
-    slug: string;
+  _count: {
+    products: number;
   };
 }
 
-const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
+const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
   const { data: session } = useSession();
   const router = useRouter();
 
   // State management
-  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
@@ -57,8 +49,13 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
   const [total, setTotal] = useState(0);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    active: 0,
+    inactive: 0,
+    draft: 0
+  });
 
   // Check if user is SuperAdmin
   useEffect(() => {
@@ -77,8 +74,8 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
     []
   );
 
-  // Fetch products
-  const fetchProducts = async () => {
+  // Fetch categories
+  const fetchCategories = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -87,16 +84,28 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
         ...(search && { search }),
       });
       
-      const response = await fetch(`/api/admin/products?${params}`);
+      const response = await fetch(`/api/admin/categories?${params}`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch products');
+        throw new Error('Failed to fetch categories');
       }
 
       const data = await response.json();
-      setProducts(data.data || []);
-      setTotalPages(data.totalPages || 1);
-      setTotal(data.total || 0);
+      setCategories(data.data || []);
+      setTotalPages(data.meta?.totalPages || 1);
+      setTotal(data.meta?.total || 0);
+      
+      // Calculate stats
+      const active = data.data?.filter((cat: Category) => cat.status === 'ACTIVE').length || 0;
+      const inactive = data.data?.filter((cat: Category) => cat.status === 'INACTIVE').length || 0;
+      const draft = data.data?.filter((cat: Category) => cat.status === 'DRAFT').length || 0;
+      
+      setStats({
+        total: data.meta?.total || 0,
+        active,
+        inactive,
+        draft
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -105,14 +114,13 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchCategories();
   }, [page, pageSize, search]);
 
   // Handlers
-  // Handlers
   const handleCreate = async (data: any) => {
     try {
-      const response = await fetch('/api/admin/products', {
+      const response = await fetch('/api/admin/categories', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,22 +130,22 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to create product');
+        throw new Error(errorData.error?.message || 'Failed to create category');
       }
 
-      await fetchProducts();
+      await fetchCategories();
       setShowCreateModal(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create product');
+      setError(err instanceof Error ? err.message : 'Failed to create category');
       throw err;
     }
   };
 
   const handleEdit = async (data: any) => {
-    if (!editingProduct) return;
+    if (!editingCategory) return;
 
     try {
-      const response = await fetch(`/api/admin/products/${editingProduct.id}`, {
+      const response = await fetch(`/api/admin/categories/${editingCategory.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -147,33 +155,33 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to update product');
+        throw new Error(errorData.error?.message || 'Failed to update category');
       }
 
-      await fetchProducts();
-      setEditingProduct(null);
+      await fetchCategories();
+      setEditingCategory(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update product');
+      setError(err instanceof Error ? err.message : 'Failed to update category');
       throw err;
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) {
+    if (!confirm('Are you sure you want to delete this category?')) {
       return;
     }
 
     try {
-      const response = await fetch(`/api/admin/products/${id}`, {
+      const response = await fetch(`/api/admin/categories/${id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete product');
+        throw new Error(errorData.error?.message || 'Failed to delete category');
       }
 
-      fetchProducts();
+      fetchCategories();
       setSelectedRows(selectedRows.filter(rowId => rowId !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -183,21 +191,21 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
   const handleBulkDelete = async () => {
     if (selectedRows.length === 0) return;
     
-    if (!confirm(`Are you sure you want to delete ${selectedRows.length} products?`)) {
+    if (!confirm(`Are you sure you want to delete ${selectedRows.length} categories?`)) {
       return;
     }
 
     try {
       await Promise.all(
         selectedRows.map(id => 
-          fetch(`/api/admin/products/${id}`, { method: 'DELETE' })
+          fetch(`/api/admin/categories/${id}`, { method: 'DELETE' })
         )
       );
       
-      fetchProducts();
+      fetchCategories();
       setSelectedRows([]);
     } catch (err) {
-      setError('Failed to delete some products');
+      setError('Failed to delete some categories');
     }
   };
 
@@ -205,8 +213,8 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
     const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     
     try {
-      const response = await fetch(`/api/admin/products/${id}`, {
-        method: 'PATCH',
+      const response = await fetch(`/api/admin/categories/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -217,44 +225,24 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
         throw new Error('Failed to update status');
       }
 
-      fetchProducts();
+      fetchCategories();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update status');
     }
   };
 
-  const handleFeaturedToggle = async (id: string, currentFeatured: boolean) => {
-    try {
-      const response = await fetch(`/api/admin/products/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ featured: !currentFeatured }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update featured status');
-      }
-
-      fetchProducts();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update featured status');
-    }
-  };
-
   // Table configuration
-  const columns: TableColumn<Product>[] = [
+  const columns: TableColumn<Category>[] = [
     {
-      key: 'images',
+      key: 'thumbnail',
       label: 'Image',
       align: 'center',
       width: 80,
       render: (value, item) => (
         <div className="flex justify-center">
-          {value && value.length > 0 ? (
+          {value ? (
             <img
-              src={value[0]}
+              src={value}
               alt={getTranslatedContent(item.name, locale as 'vi' | 'en' | 'id')}
               className="w-10 h-10 object-cover rounded-lg"
             />
@@ -270,7 +258,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
     },
     {
       key: 'name',
-      label: 'Product',
+      label: 'Name',
       sortable: true,
       render: (value, item) => (
         <div>
@@ -278,34 +266,22 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             {getTranslatedContent(value, locale as 'vi' | 'en' | 'id')}
           </div>
           <div className="text-sm text-slate-500">
-            {getTranslatedContent(item.category.name, locale as 'vi' | 'en' | 'id')}
-          </div>
-          <div className="text-xs text-slate-400">
             /{item.slug}
           </div>
         </div>
       )
     },
     {
-      key: 'price',
-      label: 'Price',
-      align: 'right',
-      sortable: true,
-      render: (value, item) => (
-        <div className="text-right">
+      key: 'description',
+      label: 'Description',
+      render: (value) => (
+        <div className="max-w-xs">
           {value ? (
-            <div>
-              <div className="font-medium text-slate-900">
-                {formatPrice(value, locale)}
-              </div>
-              {item.originalPrice && item.originalPrice > value && (
-                <div className="text-sm text-slate-500 line-through">
-                  {formatPrice(item.originalPrice, locale)}
-                </div>
-              )}
-            </div>
+            <span className="text-slate-600 text-sm line-clamp-2">
+              {getTranslatedContent(value, locale as 'vi' | 'en' | 'id')}
+            </span>
           ) : (
-            <span className="text-slate-400">Contact</span>
+            <span className="text-slate-400 text-sm">No description</span>
           )}
         </div>
       )
@@ -328,35 +304,21 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
       )
     },
     {
-      key: 'featured',
-      label: 'Featured',
-      align: 'center',
-      render: (value, item) => (
-        <button
-          onClick={() => handleFeaturedToggle(item.id, value)}
-          className="focus:outline-none"
-        >
-          {value ? (
-            <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
-          )}
-        </button>
-      )
-    },
-    {
-      key: 'images',
-      label: 'Images',
+      key: '_count',
+      label: 'Products',
       align: 'center',
       render: (value) => (
         <span className="text-slate-600">
-          {value?.length || 0}
+          {value?.products || 0}
         </span>
       )
+    },
+    {
+      key: 'sortOrder',
+      label: 'Order',
+      align: 'center',
+      sortable: true,
+      width: 80,
     },
     {
       key: 'createdAt',
@@ -378,7 +340,7 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
       ),
-      onClick: (item: Product) => setEditingProduct(item),
+      onClick: (item: Category) => setEditingCategory(item),
       variant: 'ghost' as const,
     },
     {
@@ -388,8 +350,9 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
       ),
-      onClick: (item: Product) => handleDelete(item.id),
+      onClick: (item: Category) => handleDelete(item.id),
       variant: 'ghost' as const,
+      disabled: (item: Category) => item._count.products > 0,
     }
   ];
 
@@ -400,40 +363,16 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
 
   const breadcrumbs = [
     { label: 'Dashboard', href: `/${locale}/admin` },
-    { label: 'Products', current: true }
+    { label: 'Categories', current: true }
   ];
 
   return (
     <AdminLayout
-      title="Products"
+      title="Categories"
       breadcrumbs={breadcrumbs}
       user={session.user as any}
       actions={
         <div className="flex items-center space-x-3">
-          {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-100 rounded-lg p-1">
-            <Button
-              variant={viewMode === 'table' ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('table')}
-              icon={
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              }
-            />
-            <Button
-              variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              icon={
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-              }
-            />
-          </div>
-
           {selectedRows.length > 0 && (
             <Button
               variant="destructive"
@@ -458,23 +397,23 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
               </svg>
             }
           >
-            New Product
+            New Category
           </Button>
         </div>
       }
     >
       <div className="space-y-6">
-        {/* Stats Cards */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Total Products</p>
-                <p className="text-2xl font-bold text-slate-900">{total}</p>
+                <p className="text-sm font-medium text-slate-600">Total Categories</p>
+                <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
             </div>
@@ -484,13 +423,11 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {products.filter(p => p.status === 'ACTIVE').length}
-                </p>
+                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
@@ -499,14 +436,12 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Featured</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {products.filter(p => p.featured).length}
-                </p>
+                <p className="text-sm font-medium text-slate-600">Inactive</p>
+                <p className="text-2xl font-bold text-slate-600">{stats.inactive}</p>
               </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636" />
                 </svg>
               </div>
             </div>
@@ -516,13 +451,11 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Draft</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {products.filter(p => p.status === 'DRAFT').length}
-                </p>
+                <p className="text-2xl font-bold text-yellow-600">{stats.draft}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
@@ -531,57 +464,63 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
 
         {/* Search and Filters */}
         <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <Input
-              placeholder="Search products..."
-              value=""
-              onChange={debouncedSearch}
-              className="max-w-md"
-              leftIcon={
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              }
-            />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex-1 max-w-md">
+              <SearchBox
+                value={search}
+                onChange={debouncedSearch}
+                placeholder="Search categories..."
+                className="w-full"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearch('');
+                  setPage(1);
+                }}
+                disabled={!search}
+              >
+                Clear
+              </Button>
+            </div>
           </div>
         </Card>
 
-        {/* Error Display */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg"
-          >
-            {error}
-          </motion.div>
-        )}
-
-        {/* Data Table */}
+        {/* Categories Table */}
         <Card>
+          {error && (
+            <div className="p-4 bg-red-50 border-b border-red-200">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
           <Table
-            data={products}
+            data={categories}
             columns={columns}
+            actions={actions}
             isLoading={loading}
+            selectedRows={selectedRows}
+            onRowSelect={setSelectedRows}
             pagination={{
               page,
               pageSize,
               total,
               totalPages,
               hasNext: page < totalPages,
-              hasPrev: page > 1,
+              hasPrev: page > 1
             }}
-            selectedRows={selectedRows}
-            onRowSelect={setSelectedRows}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
-            actions={actions}
             emptyState={
               <EmptyTableState
-                title="No products found"
-                description="Get started by creating your first product."
+                title="No categories found"
+                description="Get started by creating your first category."
                 onCreateNew={() => setShowCreateModal(true)}
-                createLabel="Create Product"
+                createLabel="Create Category"
               />
             }
           />
@@ -589,19 +528,19 @@ const ProductsManager: React.FC<ProductsManagerProps> = ({ locale }) => {
       </div>
 
       {/* Create/Edit Modal */}
-      <ProductForm
-        isOpen={showCreateModal || !!editingProduct}
+      <CategoryForm
+        isOpen={showCreateModal || !!editingCategory}
         onClose={() => {
           setShowCreateModal(false);
-          setEditingProduct(null);
+          setEditingCategory(null);
           setError('');
         }}
-        product={editingProduct}
-        onSubmit={editingProduct ? handleEdit : handleCreate}
+        category={editingCategory}
+        onSubmit={editingCategory ? handleEdit : handleCreate}
         locale={locale}
       />
     </AdminLayout>
   );
 };
 
-export default ProductsManager;
+export default CategoriesManager;
