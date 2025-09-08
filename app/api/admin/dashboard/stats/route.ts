@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     // Process monthly data
     const monthlyData = Array.from({ length: 12 }, (_, i) => {
       const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const count = monthlyInquiries.filter(item => {
+      const count = monthlyInquiries.filter((item: { createdAt: Date; _count: number }) => {
         const itemMonth = new Date(item.createdAt);
         return itemMonth.getMonth() === month.getMonth() && 
                itemMonth.getFullYear() === month.getFullYear();
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const categoryData = categoryDistribution.map(cat => {
+    const categoryData = categoryDistribution.map((cat: any) => {
       let name = 'Unknown';
       if (cat.name && typeof cat.name === 'object' && !Array.isArray(cat.name)) {
         const nameObj = cat.name as Record<string, any>;
