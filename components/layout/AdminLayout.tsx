@@ -13,15 +13,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
   user,
   ...props
 }) => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarToggle = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+    setSidebarOpen(!sidebarOpen);
   };
 
-  const handleUserMenuClick = () => {
-    setUserMenuOpen(!userMenuOpen);
+  // Close sidebar when clicking outside on mobile
+  const handleOverlayClick = () => {
+    setSidebarOpen(false);
   };
 
   return (
@@ -29,7 +29,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Sidebar */}
       {sidebar && (
         <AdminSidebar
-          isCollapsed={sidebarCollapsed}
+          isOpen={sidebarOpen}
           onToggle={handleSidebarToggle}
           currentPath={typeof window !== 'undefined' ? window.location.pathname : ''}
           user={user}
@@ -39,8 +39,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Main Content */}
       <div className={cn(
         'flex-1 flex flex-col overflow-hidden transition-all duration-300',
-        sidebar && !sidebarCollapsed && 'ml-0',
-        sidebar && sidebarCollapsed && 'ml-0'
+        // On desktop, always leave space for sidebar. On mobile, use full width
+        sidebar && 'lg:ml-64'
       )}>
         {/* Header */}
         <AdminHeader
@@ -49,7 +49,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
           actions={actions}
           user={user}
           onSidebarToggle={handleSidebarToggle}
-          onUserMenuClick={handleUserMenuClick}
+          sidebarOpen={sidebarOpen}
         />
 
         {/* Content */}
@@ -60,11 +60,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         </main>
       </div>
 
-      {/* Overlay for mobile sidebar */}
-      {sidebar && !sidebarCollapsed && (
+      {/* Mobile overlay */}
+      {sidebar && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-          onClick={() => setSidebarCollapsed(true)}
+          onClick={handleOverlayClick}
         />
       )}
     </div>

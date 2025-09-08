@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AdminSidebarProps, NavigationItem } from '@/types/admin';
 import { cn } from '@/lib/utils';
 import Button from '../ui/Button';
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({
-  isCollapsed,
+  isOpen,
   onToggle,
   currentPath,
   user
@@ -75,8 +75,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   });
 
   const sidebarVariants = {
-    expanded: { width: '16rem' },
-    collapsed: { width: '4rem' }
+    hidden: { x: '-100%' },
+    visible: { x: '0%' }
   };
 
   const isActive = (href: string) => {
@@ -87,98 +87,151 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   };
 
   return (
-    <motion.aside
-      className="sidebar fixed left-0 top-0 z-30 h-full flex flex-col"
-      initial={false}
-      animate={isCollapsed ? 'collapsed' : 'expanded'}
-      variants={sidebarVariants}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-200">
-        {!isCollapsed && (
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-amber-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TBS</span>
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex lg:flex-shrink-0">
+        <div className="flex flex-col w-64 bg-white border-r border-slate-200">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-slate-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-amber-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">TBS</span>
+              </div>
+              <span className="font-semibold text-slate-900">Admin</span>
             </div>
-            <span className="font-semibold text-slate-900">Admin</span>
           </div>
-        )}
-        
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggle}
-          className="text-slate-600 hover:text-slate-900"
-          icon={
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isCollapsed ? "M13 7l5 5-5 5M6 12h12" : "M11 17l-5-5 5-5M18 12H6"} />
-            </svg>
-          }
-        />
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {filteredNavigationItems.map((item) => {
-          const active = isActive(item.href);
-          
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors group',
-                {
-                  'bg-slate-900 text-white': active,
-                  'text-slate-700 hover:bg-slate-100 hover:text-slate-900': !active,
-                  'justify-center': isCollapsed,
-                }
-              )}
-            >
-              <span className={cn('flex-shrink-0', !isCollapsed && 'mr-3')}>
-                {item.icon}
-              </span>
+          {/* Navigation */}
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            {filteredNavigationItems.map((item) => {
+              const active = isActive(item.href);
               
-              {!isCollapsed && (
-                <span className="truncate">{item.label}</span>
-              )}
-              
-              {isCollapsed && (
-                <div className="absolute left-16 ml-2 px-2 py-1 bg-slate-900 text-white text-xs rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
-                  {item.label}
-                </div>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors group',
+                    {
+                      'bg-slate-900 text-white': active,
+                      'text-slate-700 hover:bg-slate-100 hover:text-slate-900': !active,
+                    }
+                  )}
+                >
+                  <span className="flex-shrink-0 mr-3">
+                    {item.icon}
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
 
-      {/* User Info */}
-      <div className="p-4 border-t border-slate-200">
-        <div className={cn(
-          'flex items-center',
-          isCollapsed ? 'justify-center' : 'space-x-3'
-        )}>
-          <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
-            <span className="text-slate-600 font-medium text-sm">
-              {user.firstName ? user.firstName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-900 truncate">
-                {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email}
-              </p>
-              <p className="text-xs text-slate-500 truncate">
-                {user.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
-              </p>
+          {/* User Info */}
+          <div className="p-4 border-t border-slate-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
+                <span className="text-slate-600 font-medium text-sm">
+                  {user.firstName ? user.firstName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900 truncate">
+                  {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email}
+                </p>
+                <p className="text-xs text-slate-500 truncate">
+                  {user.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
+                </p>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </motion.aside>
+      </aside>
+
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.aside
+            className="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 lg:hidden"
+            variants={sidebarVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-200">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-slate-900 to-amber-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">TBS</span>
+                </div>
+                <span className="font-semibold text-slate-900">Admin</span>
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onToggle}
+                className="text-slate-600 hover:text-slate-900"
+                icon={
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                }
+              />
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+              {filteredNavigationItems.map((item) => {
+                const active = isActive(item.href);
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onToggle} // Close sidebar on navigation
+                    className={cn(
+                      'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors group',
+                      {
+                        'bg-slate-900 text-white': active,
+                        'text-slate-700 hover:bg-slate-100 hover:text-slate-900': !active,
+                      }
+                    )}
+                  >
+                    <span className="flex-shrink-0 mr-3">
+                      {item.icon}
+                    </span>
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* User Info */}
+            <div className="p-4 border-t border-slate-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
+                  <span className="text-slate-600 font-medium text-sm">
+                    {user.firstName ? user.firstName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email}
+                  </p>
+                  <p className="text-xs text-slate-500 truncate">
+                    {user.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
