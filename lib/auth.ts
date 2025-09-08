@@ -38,28 +38,74 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
+        console.log('=== AUTH DEBUG START ===');
+        console.log('Environment check:');
+        console.log('- NODE_ENV:', process.env.NODE_ENV);
+        console.log('- DATABASE_URL exists:', !!process.env.DATABASE_URL);
+        console.log('- DATABASE_URL preview:', process.env.DATABASE_URL?.substring(0, 50) + '...');
+        
+        console.log('Received credentials:', {
+          email: credentials?.email,
+          passwordLength: credentials?.password?.length
+        });
+
         if (!credentials?.email || !credentials?.password) {
+          console.log('Missing credentials');
           return null;
         }
 
         try {
-          const user = await prisma.adminUser.findUnique({
+          console.log('Attempting to find user with email:', credentials.email);
+          
+          // First, let's check if user exists without status filter
+          const userCheck = await prisma.adminUser.findUnique({
             where: { email: credentials.email }
+          });
+          console.log('User check result:', userCheck ? {
+            id: userCheck.id,
+            email: userCheck.email,
+            role: userCheck.role,
+            status: userCheck.status
+          } : 'User not found');
+
+          const user = await prisma.adminUser.findUnique({
+            where: { 
+              email: credentials.email,
+              status: 'ACTIVE'
+            }
           });
 
           if (!user) {
+            console.log('User not found or inactive for email:', credentials.email);
             return null;
           }
 
+          console.log('User found:', {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            status: user.status
+          });
+          
+          console.log('Checking password...');
+          console.log('Stored hash length:', user.password.length);
+          console.log('Input password:', credentials.password);
+          
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
             user.password
           );
 
+          console.log('Password valid:', isPasswordValid);
+
           if (!isPasswordValid) {
+            console.log('Invalid password for user:', credentials.email);
             return null;
           }
 
+          console.log('Authentication successful for user:', user.email);
+          console.log('=== AUTH DEBUG END ===');
+          
           return {
             id: user.id,
             email: user.email,

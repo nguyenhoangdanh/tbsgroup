@@ -1,3 +1,4 @@
+"use server";
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -17,6 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     // Check authentication (both ADMIN and SUPER_ADMIN can view)
     const session = await getServerSession(authOptions);
+    console.log('Session data:', session);
     if (!session) {
       return NextResponse.json({ 
         success: false,
@@ -28,29 +30,18 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const { 
-      page, 
-      pageSize, 
-      search, 
-      status, 
-      sort, 
-      order, 
-      categoryId, 
-      featured, 
-      minPrice, 
-      maxPrice 
-    } = productFilterSchema.parse({
-      page: searchParams.get('page') || '1',
-      pageSize: searchParams.get('pageSize') || '20',
-      search: searchParams.get('search'),
-      status: searchParams.get('status'),
-      sort: searchParams.get('sort') || 'createdAt',
-      order: searchParams.get('order') || 'desc',
-      categoryId: searchParams.get('categoryId'),
-      featured: searchParams.get('featured'),
-      minPrice: searchParams.get('minPrice'),
-      maxPrice: searchParams.get('maxPrice'),
-    });
+    
+    // Parse query parameters directly without schema validation
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const search = searchParams.get('search');
+    const status = searchParams.get('status');
+    const sort = searchParams.get('sort') || 'createdAt';
+    const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc';
+    const categoryId = searchParams.get('categoryId');
+    const featured = searchParams.get('featured') === 'true' ? true : searchParams.get('featured') === 'false' ? false : undefined;
+    const minPrice = searchParams.get('minPrice') ? parseFloat(searchParams.get('minPrice')!) : undefined;
+    const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : undefined;
 
     const skip = (page - 1) * pageSize;
 
