@@ -404,6 +404,11 @@
     @apply p-4 lg:p-6;
   }
 
+  /* Ensure mobile card list is hidden on desktop and only visible at small sizes */
+  .data-table .mobile-cards {
+    @apply hidden;
+  }
+
   /* Mobile responsive data tables */
   @media (max-width: 768px) {
     .data-table table {
