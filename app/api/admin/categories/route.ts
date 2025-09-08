@@ -22,14 +22,14 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const { page, pageSize, search, status, sort, order } = paginationSchema.parse({
-      page: searchParams.get('page') || '1',
-      pageSize: searchParams.get('pageSize') || '20',
-      search: searchParams.get('search'),
-      status: searchParams.get('status'),
-      sort: searchParams.get('sort') || 'createdAt',
-      order: searchParams.get('order') || 'desc',
-    });
+    
+    // Parse query parameters directly without schema validation to avoid null issues
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const search = searchParams.get('search');
+    const status = searchParams.get('status');
+    const sort = searchParams.get('sort') || 'createdAt';
+    const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc';
 
     const skip = (page - 1) * pageSize;
 

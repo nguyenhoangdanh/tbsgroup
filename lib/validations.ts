@@ -84,19 +84,19 @@ export const productUpdateSchema = productSchema.partial().extend({
 
 // Query parameters schemas
 export const paginationSchema = z.object({
-  page: z.string().transform(val => parseInt(val) || 1).pipe(z.number().int().min(1)),
-  pageSize: z.string().transform(val => parseInt(val) || 10).pipe(z.number().int().min(1).max(50)),
-  search: z.string().optional(),
+  page: z.string().nullable().optional().transform(val => parseInt(val || '1') || 1).pipe(z.number().int().min(1)),
+  pageSize: z.string().nullable().optional().transform(val => parseInt(val || '10') || 10).pipe(z.number().int().min(1).max(50)),
+  search: z.string().nullable().optional(),
   status: z.enum(['ACTIVE', 'INACTIVE', 'DRAFT']).optional(),
-  sort: z.enum(['name', 'price', 'createdAt', 'updatedAt']).default('createdAt'),
+  sort: z.enum(['name', 'price', 'createdAt', 'updatedAt', 'sortOrder']).default('createdAt'),
   order: z.enum(['asc', 'desc']).default('desc'),
 });
 
 export const productFilterSchema = paginationSchema.extend({
   categoryId: z.string().uuid().optional(),
-  featured: z.string().transform(val => val === 'true').pipe(z.boolean()).optional(),
-  minPrice: z.string().transform(val => val ? parseFloat(val) : undefined).pipe(z.number().positive().optional()),
-  maxPrice: z.string().transform(val => val ? parseFloat(val) : undefined).pipe(z.number().positive().optional()),
+  featured: z.string().nullable().optional().transform(val => val === 'true' ? true : val === 'false' ? false : undefined),
+  minPrice: z.string().nullable().optional().transform(val => val && val !== '' ? parseFloat(val) : undefined).pipe(z.number().positive().optional()),
+  maxPrice: z.string().nullable().optional().transform(val => val && val !== '' ? parseFloat(val) : undefined).pipe(z.number().positive().optional()),
 });
 
 // Type exports

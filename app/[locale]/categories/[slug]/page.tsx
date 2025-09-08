@@ -4,7 +4,7 @@ import { MotionFadeIn } from '@/components/MotionFadeIn';
 import { MotionStagger } from '@/components/MotionStagger';
 import { Link } from '@/lib/i18n/routing';
 import { generateSEOMetadata } from '@/lib/seo';
-import { getLocalizedContent } from '@/lib/utils';
+import { getLocalizedContent, formatPrice } from '@/lib/utils';
 
 async function getCategory(slug: string) {
   try {
@@ -152,17 +152,11 @@ export default async function CategoryPage({
                         {product.price ? (
                           <div className="flex items-center space-x-2">
                             <span className="text-lg font-bold text-brand-primary">
-                              {new Intl.NumberFormat('vi-VN', {
-                                style: 'currency',
-                                currency: 'VND',
-                              }).format(product.price)}
+                              {formatPrice(product.price, locale)}
                             </span>
                             {product.originalPrice && product.originalPrice > product.price && (
                               <span className="text-sm text-gray-500 line-through">
-                                {new Intl.NumberFormat('vi-VN', {
-                                  style: 'currency',
-                                  currency: 'VND',
-                                }).format(product.originalPrice)}
+                                {formatPrice(product.originalPrice, locale)}
                               </span>
                             )}
                           </div>
