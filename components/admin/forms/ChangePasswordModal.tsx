@@ -190,18 +190,18 @@ export default function ChangePasswordModal({
 
         {/* User Information */}
         <div className="bg-slate-50 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-slate-900 mb-2">User Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900 mb-2">User Information</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-600">Name:</span>
-              <span className="text-slate-900 font-medium">{user.firstName} {user.lastName}</span>
+              <span className="text-neutral-600">Name:</span>
+              <span className="text-neutral-900 font-medium">{user.firstName} {user.lastName}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Email:</span>
-              <span className="text-slate-900">{user.email}</span>
+              <span className="text-neutral-600">Email:</span>
+              <span className="text-neutral-900">{user.email}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600">Role:</span>
+              <span className="text-neutral-600">Role:</span>
               <span className={`badge-base ${user.role === 'SUPER_ADMIN' ? 'badge-info' : 'badge-neutral'}`}>
                 {user.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
               </span>
@@ -246,7 +246,7 @@ export default function ChangePasswordModal({
               animate={{ opacity: 1, height: 'auto' }}
               className="mt-2"
             >
-              <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
+              <div className="flex items-center justify-between text-xs text-neutral-600 mb-1">
                 <span>Password Strength</span>
                 <span className={`font-medium ${passwordStrength >= 75 ? 'text-green-600' : passwordStrength >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
                   {getPasswordStrengthLabel()}
@@ -258,7 +258,7 @@ export default function ChangePasswordModal({
                   style={{ width: `${passwordStrength}%` }}
                 />
               </div>
-              <div className="mt-1 text-xs text-slate-500">
+              <div className="mt-1 text-xs text-neutral-600">
                 Password should contain uppercase, lowercase, numbers, and be at least 8 characters
               </div>
             </motion.div>
@@ -301,27 +301,27 @@ export default function ChangePasswordModal({
             id="forcePasswordChange"
             checked={forcePasswordChange}
             onChange={(e) => setForcePasswordChange(e.target.checked)}
-            className="mt-1 rounded border-slate-300 text-slate-900 focus:ring-slate-500"
+            className="mt-1 rounded border-slate-300 text-neutral-900 focus:ring-slate-500"
           />
           <div>
             <label htmlFor="forcePasswordChange" className="text-sm font-medium text-slate-700">
               Force password change on next login
             </label>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-neutral-600 mt-1">
               If checked, the user will be required to change their password when they next log in.
             </p>
           </div>
         </div>
 
         {/* Security Warning */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="bg-warning-light border border-slate-200 rounded-lg p-4">
           <div className="flex items-start">
-            <svg className="w-5 h-5 text-amber-400 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-warning mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
             <div>
-              <p className="text-sm font-medium text-amber-800">Security Notice</p>
-              <ul className="text-sm text-amber-700 mt-1 list-disc list-inside space-y-1">
+              <p className="text-sm font-medium text-warning">Security Notice</p>
+              <ul className="text-sm text-warning mt-1 list-disc list-inside space-y-1">
                 <li>The user will need to log out and log back in with the new password</li>
                 <li>This action will be logged for security auditing</li>
                 <li>Consider notifying the user about the password change via email</li>
@@ -343,7 +343,7 @@ export default function ChangePasswordModal({
           
           <Button
             type="submit"
-            variant="primary"
+            variant="accent"
             isLoading={isLoading}
             disabled={isLoading}
           >
