@@ -10,11 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
+
 model AdminUser {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String    @id @default(uuid())
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
+  role      AdminRole @default(ADMIN)
+  createdAt DateTime  @default(now())
 
   @@map("admin_users")
 }
@@ -27,4 +33,47 @@ model CustomerInquiry {
   createdAt DateTime @default(now())
 
   @@map("customer_inquiries")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float?
+  imageUrls   String[]
+  isActive    Boolean  @default(true)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  address   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
