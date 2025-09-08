@@ -219,7 +219,7 @@ const UserForm: React.FC<UserFormProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-accent hover:text-accent-light"
               >
                 {showPassword ? 'Hide' : 'Change Password'}
               </button>
