@@ -90,20 +90,20 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          shortDesc: true,
-          price: true,
-          originalPrice: true,
-          images: true,
-          featured: true,
-          seoTitle: true,
-          seoDesc: true,
-          createdAt: true,
-          category: true,
-        }
+        // select: {
+        //   id: true,
+        //   name: true,
+        //   slug: true,
+        //   shortDesc: true,
+        //   price: true,
+        //   originalPrice: true,
+        //   images: true,
+        //   featured: true,
+        //   seoTitle: true,
+        //   seoDesc: true,
+        //   createdAt: true,
+        //   category: true,
+        // }
       }),
       prisma.product.count({ where }),
     ]);
