@@ -160,7 +160,7 @@ const UserForm: React.FC<UserFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Basic Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Basic Information</h4>
           
           <Input
             label="Email Address"
@@ -212,7 +212,7 @@ const UserForm: React.FC<UserFormProps> = ({
         {/* Password Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-slate-900">
+            <h4 className="text-sm font-medium text-neutral-900">
               {user ? 'Change Password (Optional)' : 'Password'}
             </h4>
             {user && (
@@ -264,7 +264,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
         {/* Role and Status */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Permissions & Status</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Permissions & Status</h4>
           
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
