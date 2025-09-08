@@ -236,7 +236,7 @@ export default function CreateUserModal({
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-slate-400 hover:text-neutral-600"
                 >
                   {showPassword ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -259,7 +259,7 @@ export default function CreateUserModal({
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mt-2"
               >
-                <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
+                <div className="flex items-center justify-between text-xs text-neutral-600 mb-1">
                   <span>Password Strength</span>
                   <span className={`font-medium ${passwordStrength >= 75 ? 'text-green-600' : passwordStrength >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
                     {getPasswordStrengthLabel()}
@@ -291,7 +291,7 @@ export default function CreateUserModal({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-slate-400 hover:text-neutral-600"
               >
                 {showConfirmPassword ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
