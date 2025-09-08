@@ -5,12 +5,12 @@
 /* Modern Design System CSS Variables */
 :root {
   /* Brand Colors */
-  --primary: #0F172A;           /* slate-900 - Main brand */
-  --primary-light: #1E293B;     /* slate-800 */
-  --primary-dark: #020617;      /* slate-950 */
-  --secondary: #334155;         /* slate-700 */
-  --accent: #C0822C;            /* amber-600 - Gold accent */
-  --accent-light: #FBBF24;      /* amber-400 */
+  --primary: #0B6A2F;          /* TBS deep green - Main brand */
+  --primary-light: #2E8B57;    /* lighter green */
+  --primary-dark: #06441F;     /* darker green */
+  --secondary: #145C34;        /* supporting green */
+  --accent: #F2C94C;           /* gold/yellow accent from logo */
+  --accent-light: #FBD873;
   
   /* Semantic Colors */
   --success: #059669;           /* emerald-600 */
@@ -25,7 +25,7 @@
   /* Neutral Colors */
   --neutral-50: #F8FAFC;        /* Background */
   --neutral-100: #F1F5F9;       /* Muted background */
-  --neutral-200: #E2E8F0;       /* Border */
+  --neutral-200: #E6EEF0;       /* Border (slightly warmer) */
   --neutral-300: #CBD5E1;       /* Border hover */
   --neutral-400: #94A3B8;       /* Placeholder */
   --neutral-500: #64748B;       /* Text secondary */
