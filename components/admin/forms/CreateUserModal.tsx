@@ -184,7 +184,7 @@ export default function CreateUserModal({
 
         {/* Personal Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Personal Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Personal Information</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -209,7 +209,7 @@ export default function CreateUserModal({
 
         {/* Account Information */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Account Information</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Account Information</h4>
           
           <Input
             label="Email Address *"
@@ -310,7 +310,7 @@ export default function CreateUserModal({
 
         {/* Permissions & Status */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-slate-900">Permissions & Status</h4>
+          <h4 className="text-sm font-medium text-neutral-900">Permissions & Status</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
