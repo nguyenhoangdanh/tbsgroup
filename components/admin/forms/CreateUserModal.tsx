@@ -236,7 +236,7 @@ export default function CreateUserModal({
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-slate-400 hover:text-neutral-600"
+                  className="text-neutral-400 hover:text-neutral-600"
                 >
                   {showPassword ? (
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -291,7 +291,7 @@ export default function CreateUserModal({
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="text-slate-400 hover:text-neutral-600"
+                className="text-neutral-400 hover:text-neutral-600"
               >
                 {showConfirmPassword ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
