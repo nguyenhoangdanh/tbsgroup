@@ -40,7 +40,7 @@ export function HeroSection() {
                 href="/products" 
                 className="inline-block btn-primary text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
               >
-                {t('hero.cta')}
+                {t('hero.cta.explore')}
               </Link>
             </motion.div>
           </MotionStaggerItem>
