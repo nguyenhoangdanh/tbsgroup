@@ -10,11 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          primary: '#059669', // Emerald green - main brand color
-          'primary-dark': '#047857', // Darker emerald for hover states
-          'primary-light': '#10B981', // Lighter emerald for accents
-          secondary: '#065F46', // Deep green
-          accent: '#34D399', // Light green accent
+          primary: '#0F172A',
+          'primary-dark': '#020617',
+          'primary-light': '#1E293B',
+          secondary: '#334155',
+          accent: '#C0822C',
           neutral: {
             50: '#F8FAFC',
             100: '#F1F5F9',
