@@ -3,6 +3,7 @@ import { MotionFadeIn } from '@/components/MotionFadeIn';
 import { MotionStagger } from '@/components/MotionStagger';
 import { Link } from '@/lib/i18n/routing';
 import { generateSEOMetadata } from '@/lib/seo';
+import { getTranslatedContent } from '@/lib/utils/multilingual';
 
 // This would typically fetch from API
 async function getCategories() {
@@ -38,7 +39,11 @@ export async function generateMetadata({
   });
 }
 
-export default async function CategoriesPage() {
+export default async function CategoriesPage({
+  params: { locale }
+}: {
+  params: { locale: string };
+}) {
   const t = useTranslations();
   const categories = await getCategories();
 
@@ -72,24 +77,24 @@ export default async function CategoriesPage() {
                   {category.thumbnail ? (
                     <img 
                       src={category.thumbnail} 
-                      alt={category.name.vi || category.name.en || category.name.id}
+                      alt={getTranslatedContent(category.name, locale as 'vi' | 'en' | 'id')}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <div className="w-full h-48 bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center">
                       <span className="text-white text-2xl font-serif">
-                        {(category.name.vi || category.name.en || category.name.id).charAt(0)}
+                        {getTranslatedContent(category.name, locale as 'vi' | 'en' | 'id').charAt(0)}
                       </span>
                     </div>
                   )}
                 </div>
                 <div className="p-6">
                   <h3 className="font-serif text-xl font-bold text-brand-primary mb-2 group-hover:text-brand-accent transition-colors">
-                    {category.name.vi || category.name.en || category.name.id}
+                    {getTranslatedContent(category.name, locale as 'vi' | 'en' | 'id')}
                   </h3>
                   {category.description && (
                     <p className="text-gray-600 mb-4">
-                      {category.description.vi || category.description.en || category.description.id}
+                      {getTranslatedContent(category.description, locale as 'vi' | 'en' | 'id')}
                     </p>
                   )}
                   <div className="flex items-center justify-between">

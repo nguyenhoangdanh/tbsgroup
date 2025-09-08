@@ -7,19 +7,24 @@ import { useTranslations } from 'next-intl';
 import { AdminNavigation } from '@/components/AdminNavigation';
 import { MotionFadeIn } from '@/components/MotionFadeIn';
 import { motion } from 'framer-motion';
+import { getTranslatedContent, MultilingualContent } from '@/lib/utils/multilingual';
+import { formatPrice } from '@/lib/utils';
 
 interface Product {
   id: string;
-  name: string;
+  name: MultilingualContent;
   slug: string;
-  description?: string;
+  description?: MultilingualContent;
+  shortDesc?: MultilingualContent;
   price?: number;
-  imageUrls: string[];
-  isActive: boolean;
+  originalPrice?: number;
+  images: string[];
+  status: string;
+  featured: boolean;
   createdAt: string;
   category: {
     id: string;
-    name: string;
+    name: MultilingualContent;
     slug: string;
   };
 }
@@ -171,48 +176,45 @@ export function ProductsPage({ locale }: ProductsPageProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
-                    {product?.imageUrls?.length > 0 && (
+                    {product?.images?.length > 0 && (
                       <img
-                        src={product.imageUrls[0]}
-                        alt={product.name}
+                        src={product.images[0]}
+                        alt={getTranslatedContent(product.name, locale as 'vi' | 'en' | 'id')}
                         className="w-full h-32 object-cover rounded-md mb-3"
                       />
                     )}
                     
                     <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                      {product.name}
+                      {getTranslatedContent(product.name, locale as 'vi' | 'en' | 'id')}
                     </h3>
                     
                     <p className="text-sm text-gray-500 mb-2">
-                      Category: {product.category.name}
+                      Category: {getTranslatedContent(product.category.name, locale as 'vi' | 'en' | 'id')}
                     </p>
                     
                     {product.price && (
                       <p className="text-lg font-semibold text-brand-primary mb-2">
-                        {new Intl.NumberFormat('vi-VN', { 
-                          style: 'currency', 
-                          currency: 'VND' 
-                        }).format(product.price)}
+                        {formatPrice(product.price, locale)}
                       </p>
                     )}
                     
-                    {product.description && (
+                    {product.shortDesc && (
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                        {product.description}
+                        {getTranslatedContent(product.shortDesc, locale as 'vi' | 'en' | 'id')}
                       </p>
                     )}
                     
                     <div className="flex items-center justify-between mb-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        product.isActive 
+                        product.status === 'ACTIVE'
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {product.isActive ? 'Active' : 'Inactive'}
+                        {product.status === 'ACTIVE' ? 'Active' : product.status}
                       </span>
                       
                       <span className="text-sm text-gray-500">
-                        {product?.imageUrls?.length} images
+                        {product?.images?.length} images
                       </span>
                     </div>
                     

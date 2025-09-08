@@ -7,14 +7,15 @@ import { useTranslations } from 'next-intl';
 import { AdminNavigation } from '@/components/AdminNavigation';
 import { MotionFadeIn } from '@/components/MotionFadeIn';
 import { motion } from 'framer-motion';
+import { getTranslatedContent, MultilingualContent } from '@/lib/utils/multilingual';
 
 interface Category {
   id: string;
-  name: string;
+  name: MultilingualContent;
   slug: string;
-  description?: string;
-  imageUrl?: string;
-  isActive: boolean;
+  description?: MultilingualContent;
+  thumbnail?: string;
+  status: string;
   createdAt: string;
   _count: {
     products: number;
@@ -170,16 +171,16 @@ export function CategoriesPage({ locale }: CategoriesPageProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
-                    {category.imageUrl && (
+                    {category.thumbnail && (
                       <img
-                        src={category.imageUrl}
-                        alt={category.name}
+                        src={category.thumbnail}
+                        alt={getTranslatedContent(category.name, locale as 'vi' | 'en' | 'id')}
                         className="w-full h-32 object-cover rounded-md mb-3"
                       />
                     )}
                     
                     <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                      {category.name}
+                      {getTranslatedContent(category.name, locale as 'vi' | 'en' | 'id')}
                     </h3>
                     
                     <p className="text-sm text-gray-500 mb-2">
@@ -188,17 +189,17 @@ export function CategoriesPage({ locale }: CategoriesPageProps) {
                     
                     {category.description && (
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                        {category.description}
+                        {getTranslatedContent(category.description, locale as 'vi' | 'en' | 'id')}
                       </p>
                     )}
                     
                     <div className="flex items-center justify-between mb-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        category.isActive 
+                        category.status === 'ACTIVE'
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {category.isActive ? 'Active' : 'Inactive'}
+                        {category.status === 'ACTIVE' ? 'Active' : category.status}
                       </span>
                       
                       <span className="text-sm text-gray-500">
