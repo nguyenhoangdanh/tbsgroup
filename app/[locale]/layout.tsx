@@ -1,9 +1,13 @@
+import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { generateSEOMetadata, generateOrganizationSchema } from '@/lib/seo';
 import '../globals.css';
+
+const inter = Inter({ subsets: ['latin'] });
 
 // For the build environment, we'll use system fonts instead of Google Fonts
 // In production, you can restore the Google Fonts imports
@@ -41,13 +45,15 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased">
+      <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

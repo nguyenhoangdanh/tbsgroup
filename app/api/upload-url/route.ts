@@ -18,7 +18,13 @@ export async function POST(request: NextRequest) {
     
     if (!rateLimitResult.success) {
       return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
+        { 
+          success: false,
+          error: {
+            code: 'RATE_LIMIT_EXCEEDED',
+            message: 'Too many requests. Please try again later.'
+          }
+        },
         { status: 429 }
       );
     }
@@ -29,17 +35,30 @@ export async function POST(request: NextRequest) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: 'Invalid request', details: result.error.errors },
+        { 
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid request',
+            details: result.error.errors
+          }
+        },
         { status: 400 }
       );
     }
 
-    const { files } = result.data;
+    const { files, type } = result.data;
 
     // Check file count
     if (files.length > MAX_FILES) {
       return NextResponse.json(
-        { error: `Maximum ${MAX_FILES} files allowed` },
+        { 
+          success: false,
+          error: {
+            code: 'TOO_MANY_FILES',
+            message: `Maximum ${MAX_FILES} files allowed`
+          }
+        },
         { status: 400 }
       );
     }
@@ -52,8 +71,8 @@ export async function POST(request: NextRequest) {
           throw new Error(`Invalid file type: ${file.contentType}`);
         }
 
-        // Generate key and presigned URL
-        const key = generateKey(file.filename);
+        // Generate key with type prefix and presigned URL
+        const key = generateKey(file.filename, type);
         const url = await createPresignedUrl(key, file.contentType);
         const publicUrl = getPublicUrl(key);
 
@@ -66,11 +85,20 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({ uploads });
+    return NextResponse.json({ 
+      success: true,
+      data: { uploads }
+    });
   } catch (error) {
     console.error('Upload URL generation error:', error);
     return NextResponse.json(
-      { error: 'Failed to generate upload URLs' },
+      { 
+        success: false,
+        error: {
+          code: 'UPLOAD_URL_ERROR',
+          message: 'Failed to generate upload URLs'
+        }
+      },
       { status: 500 }
     );
   }

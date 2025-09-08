@@ -6,16 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Hash the admin passwords
-  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'superadmin@tbs-handbag.com';
-  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin123!';
+  // Create SuperAdmin user
+  const superAdminEmail = process.env.SUPER_ADMIN_SEED_EMAIL || 'superadmin@tbs-handbag.com';
+  const superAdminPassword = process.env.SUPER_ADMIN_SEED_PASSWORD || 'SuperAdminPass!456';
   const hashedSuperAdminPassword = await bcrypt.hash(superAdminPassword, 12);
 
-  const adminEmail = process.env.ADMIN_SEED_EMAIL || 'admin@tbs-handbag.com';
-  const adminPassword = process.env.ADMIN_SEED_PASSWORD || 'ChangeThisStrongPwd!123';
-  const hashedPassword = await bcrypt.hash(adminPassword, 12);
-
-  // Create super admin user
   const superAdminUser = await prisma.adminUser.upsert({
     where: { email: superAdminEmail },
     update: {},
@@ -23,136 +18,34 @@ async function main() {
       email: superAdminEmail,
       password: hashedSuperAdminPassword,
       role: 'SUPER_ADMIN',
+      firstName: 'Super',
+      lastName: 'Admin',
+      status: 'ACTIVE',
     },
   });
 
-  console.log('✅ Super Admin user created:', superAdminUser.email);
+  console.log('✅ SuperAdmin user created:', superAdminUser.email);
 
-  // Create admin user
+  // Create regular Admin user
+  const adminEmail = process.env.ADMIN_SEED_EMAIL || 'admin@tbs-handbag.com';
+  const adminPassword = process.env.ADMIN_SEED_PASSWORD || 'SuperStrongPassword!123';
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 12);
+
   const adminUser = await prisma.adminUser.upsert({
     where: { email: adminEmail },
     update: {},
     create: {
       email: adminEmail,
-      password: hashedPassword,
+      password: hashedAdminPassword,
       role: 'ADMIN',
+      firstName: 'Admin',
+      lastName: 'User',
+      status: 'ACTIVE',
+      createdBy: superAdminUser.id,
     },
   });
 
   console.log('✅ Admin user created:', adminUser.email);
-
-  // Create sample categories
-  const categories = [
-    {
-      name: 'Premium Urban Elegance',
-      nameVi: 'Premium Urban Elegance',
-      nameEn: 'Premium Urban Elegance',
-      nameId: 'Premium Urban Elegance',
-      description: 'Dành cho người phụ nữ hiện đại, năng động với phong cách thanh lịch và tinh tế.',
-      descriptionVi: 'Dành cho người phụ nữ hiện đại, năng động với phong cách thanh lịch và tinh tế.',
-      descriptionEn: 'For modern, dynamic women with elegant and sophisticated style.',
-      descriptionId: 'Untuk wanita modern dan dinamis dengan gaya elegan dan canggih.',
-      slug: 'premium-urban-elegance',
-      sortOrder: 1,
-    },
-    {
-      name: 'Sustainable Heritage',
-      nameVi: 'Sustainable Heritage',
-      nameEn: 'Sustainable Heritage',
-      nameId: 'Sustainable Heritage',
-      description: 'Bộ sưu tập bền vững, thể hiện cam kết của chúng tôi với môi trường và tương lai.',
-      descriptionVi: 'Bộ sưu tập bền vững, thể hiện cam kết của chúng tôi với môi trường và tương lai.',
-      descriptionEn: 'Sustainable collection, showing our commitment to the environment and future.',
-      descriptionId: 'Koleksi berkelanjutan, menunjukkan komitmen kami terhadap lingkungan dan masa depan.',
-      slug: 'sustainable-heritage',
-      sortOrder: 2,
-    },
-    {
-      name: 'Seasonal Innovation',
-      nameVi: 'Seasonal Innovation',
-      nameEn: 'Seasonal Innovation',
-      nameId: 'Seasonal Innovation',
-      description: 'Những thiết kế mới nhất theo xu hướng thời trang từng mùa.',
-      descriptionVi: 'Những thiết kế mới nhất theo xu hướng thời trang từng mùa.',
-      descriptionEn: 'Latest designs following seasonal fashion trends.',
-      descriptionId: 'Desain terbaru mengikuti tren fashion musiman.',
-      slug: 'seasonal-innovation',
-      sortOrder: 3,
-    },
-  ];
-
-  const createdCategories = [];
-  for (const category of categories) {
-    const createdCategory = await prisma.category.upsert({
-      where: { slug: category.slug },
-      update: {},
-      create: category,
-    });
-    createdCategories.push(createdCategory);
-  }
-
-  console.log('✅ Sample categories created');
-
-  // Create sample products
-  const products = [
-    {
-      name: 'Urban Classic Tote',
-      nameVi: 'Túi Tote Urban Classic',
-      nameEn: 'Urban Classic Tote',
-      nameId: 'Urban Classic Tote',
-      description: 'Túi tote sang trọng phù hợp cho cuộc sống đô thị hiện đại.',
-      descriptionVi: 'Túi tote sang trọng phù hợp cho cuộc sống đô thị hiện đại.',
-      descriptionEn: 'Elegant tote bag suitable for modern urban life.',
-      descriptionId: 'Tas tote elegan yang cocok untuk kehidupan urban modern.',
-      slug: 'urban-classic-tote',
-      price: 850000,
-      isFeatured: true,
-      categoryId: createdCategories[0].id,
-      imageUrls: [],
-      sortOrder: 1,
-    },
-    {
-      name: 'Eco-Friendly Shoulder Bag',
-      nameVi: 'Túi Đeo Vai Thân Thiện Môi Trường',
-      nameEn: 'Eco-Friendly Shoulder Bag',
-      nameId: 'Eco-Friendly Shoulder Bag',
-      description: 'Túi đeo vai được làm từ vật liệu tái chế, thân thiện với môi trường.',
-      descriptionVi: 'Túi đeo vai được làm từ vật liệu tái chế, thân thiện với môi trường.',
-      descriptionEn: 'Shoulder bag made from recycled materials, environmentally friendly.',
-      descriptionId: 'Tas selempang yang dibuat dari bahan daur ulang, ramah lingkungan.',
-      slug: 'eco-friendly-shoulder-bag',
-      price: 720000,
-      isFeatured: true,
-      categoryId: createdCategories[1].id,
-      imageUrls: [],
-      sortOrder: 1,
-    },
-    {
-      name: 'Seasonal Crossbody',
-      nameVi: 'Túi Đeo Chéo Theo Mùa',
-      nameEn: 'Seasonal Crossbody',
-      nameId: 'Seasonal Crossbody',
-      description: 'Túi đeo chéo với thiết kế theo xu hướng mùa.',
-      descriptionVi: 'Túi đeo chéo với thiết kế theo xu hướng mùa.',
-      descriptionEn: 'Crossbody bag with seasonal trend design.',
-      descriptionId: 'Tas selempang dengan desain tren musiman.',
-      slug: 'seasonal-crossbody',
-      price: 650000,
-      categoryId: createdCategories[2].id,
-      imageUrls: [],
-      sortOrder: 1,
-    },
-  ];
-
-  for (const product of products) {
-    await prisma.product.upsert({
-      where: { slug: product.slug },
-      update: {},
-      create: product,
-    });
-  }
-
-  console.log('✅ Sample products created');
 
   // Create some sample inquiries for testing
   const sampleInquiries = [
@@ -175,7 +68,264 @@ async function main() {
   }
 
   console.log('✅ Sample inquiries created');
+
+  // Create sample categories with multilingual content
+  const categories = [
+    {
+      name: {
+        vi: 'Túi xách cao cấp',
+        en: 'Premium Handbags',
+        id: 'Tas Premium'
+      },
+      slug: 'premium-handbags',
+      description: {
+        vi: 'Bộ sưu tập túi xách cao cấp sang trọng với chất liệu da thật',
+        en: 'Luxury premium handbag collection with genuine leather materials',
+        id: 'Koleksi tas premium mewah dengan bahan kulit asli'
+      },
+      thumbnail: '/images/categories/premium-handbags.jpg',
+      status: 'ACTIVE' as const,
+      sortOrder: 1,
+    },
+    {
+      name: {
+        vi: 'Ví da',
+        en: 'Leather Wallets',
+        id: 'Dompet Kulit'
+      },
+      slug: 'leather-wallets',
+      description: {
+        vi: 'Ví da thật cao cấp với thiết kế tinh tế',
+        en: 'Premium genuine leather wallets with sophisticated design',
+        id: 'Dompet kulit asli premium dengan desain canggih'
+      },
+      thumbnail: '/images/categories/leather-wallets.jpg',
+      status: 'ACTIVE' as const,
+      sortOrder: 2,
+    },
+    {
+      name: {
+        vi: 'Túi du lịch',
+        en: 'Travel Bags',
+        id: 'Tas Perjalanan'
+      },
+      slug: 'travel-bags',
+      description: {
+        vi: 'Túi du lịch bền bỉ và tiện dụng cho mọi chuyến đi',
+        en: 'Durable and functional travel bags for all your journeys',
+        id: 'Tas perjalanan tahan lama dan fungsional untuk semua perjalanan Anda'
+      },
+      thumbnail: '/images/categories/travel-bags.jpg',
+      status: 'ACTIVE' as const,
+      sortOrder: 3,
+    },
+  ];
+
+  for (const category of categories) {
+    await prisma.category.upsert({
+      where: { slug: category.slug },
+      update: {},
+      create: category,
+    });
+  }
+
+  console.log('✅ Sample categories created');
+
+  // Create sample products with multilingual content
+  const sampleProducts = [
+    {
+      name: {
+        vi: 'Túi xách Elegance',
+        en: 'Elegance Handbag',
+        id: 'Tas Elegance'
+      },
+      slug: 'elegance-handbag',
+      description: {
+        vi: 'Túi xách được làm từ da thật cao cấp, thiết kế sang trọng và tinh tế. Phù hợp cho các dịp quan trọng và công việc.',
+        en: 'Handbag made from premium genuine leather with luxurious and sophisticated design. Perfect for important occasions and work.',
+        id: 'Tas yang dibuat dari kulit asli premium dengan desain mewah dan canggih. Sempurna untuk acara penting dan kerja.'
+      },
+      shortDesc: {
+        vi: 'Túi xách da thật cao cấp',
+        en: 'Premium genuine leather handbag',
+        id: 'Tas kulit asli premium'
+      },
+      price: 2500000,
+      originalPrice: 3000000,
+      images: ['/images/products/elegance-handbag-1.jpg', '/images/products/elegance-handbag-2.jpg'],
+      specifications: {
+        material: {
+          vi: 'Da bò thật 100%',
+          en: '100% Genuine Cowhide Leather',
+          id: '100% Kulit Sapi Asli'
+        },
+        dimensions: {
+          vi: '30cm x 25cm x 12cm',
+          en: '30cm x 25cm x 12cm',
+          id: '30cm x 25cm x 12cm'
+        },
+        weight: {
+          vi: '0.8kg',
+          en: '0.8kg',
+          id: '0.8kg'
+        }
+      },
+      categorySlug: 'premium-handbags',
+      status: 'ACTIVE' as const,
+      featured: true,
+      sortOrder: 1,
+      seoTitle: {
+        vi: 'Túi xách Elegance - Da thật cao cấp | TBS Group',
+        en: 'Elegance Handbag - Premium Leather | TBS Group',
+        id: 'Tas Elegance - Kulit Premium | TBS Group'
+      },
+      seoDesc: {
+        vi: 'Túi xách Elegance từ da thật cao cấp, thiết kế sang trọng. Mua ngay với giá ưu đãi tại TBS Group.',
+        en: 'Elegance handbag in premium genuine leather with luxury design. Buy now at special price from TBS Group.',
+        id: 'Tas Elegance dari kulit asli premium dengan desain mewah. Beli sekarang dengan harga khusus dari TBS Group.'
+      }
+    },
+    {
+      name: {
+        vi: 'Ví da Executive',
+        en: 'Executive Leather Wallet',
+        id: 'Dompet Kulit Executive'
+      },
+      slug: 'executive-leather-wallet',
+      description: {
+        vi: 'Ví da dành cho doanh nhân với nhiều ngăn tiện lợi, chất liệu da cao cấp bền đẹp.',
+        en: 'Leather wallet for executives with multiple convenient compartments, premium durable leather material.',
+        id: 'Dompet kulit untuk eksekutif dengan berbagai kompartemen yang nyaman, bahan kulit premium yang tahan lama.'
+      },
+      shortDesc: {
+        vi: 'Ví da doanh nhân cao cấp',
+        en: 'Premium executive leather wallet',
+        id: 'Dompet kulit eksekutif premium'
+      },
+      price: 850000,
+      originalPrice: 1000000,
+      images: ['/images/products/executive-wallet-1.jpg'],
+      specifications: {
+        material: {
+          vi: 'Da bò Ý cao cấp',
+          en: 'Premium Italian Leather',
+          id: 'Kulit Italia Premium'
+        },
+        dimensions: {
+          vi: '11cm x 9cm x 2cm',
+          en: '11cm x 9cm x 2cm',
+          id: '11cm x 9cm x 2cm'
+        },
+        compartments: {
+          vi: '8 ngăn thẻ, 2 ngăn tiền',
+          en: '8 card slots, 2 bill compartments',
+          id: '8 slot kartu, 2 kompartemen uang'
+        }
+      },
+      categorySlug: 'leather-wallets',
+      status: 'ACTIVE' as const,
+      featured: false,
+      sortOrder: 2,
+      seoTitle: {
+        vi: 'Ví da Executive - Doanh nhân cao cấp | TBS Group',
+        en: 'Executive Leather Wallet - Premium Business | TBS Group',
+        id: 'Dompet Kulit Executive - Bisnis Premium | TBS Group'
+      },
+      seoDesc: {
+        vi: 'Ví da Executive dành cho doanh nhân với thiết kế tinh tế, nhiều ngăn tiện lợi. Chất lượng cao cấp từ TBS Group.',
+        en: 'Executive leather wallet for business professionals with sophisticated design and convenient compartments. Premium quality from TBS Group.',
+        id: 'Dompet kulit Executive untuk profesional bisnis dengan desain canggih dan kompartemen yang nyaman. Kualitas premium dari TBS Group.'
+      }
+    },
+    {
+      name: {
+        vi: 'Túi du lịch Explorer',
+        en: 'Explorer Travel Bag',
+        id: 'Tas Perjalanan Explorer'
+      },
+      slug: 'explorer-travel-bag',
+      description: {
+        vi: 'Túi du lịch chống nước với dung tích lớn, thiết kế thông minh cho những chuyến đi dài.',
+        en: 'Water-resistant travel bag with large capacity and smart design for long journeys.',
+        id: 'Tas perjalanan tahan air dengan kapasitas besar dan desain pintar untuk perjalanan panjang.'
+      },
+      shortDesc: {
+        vi: 'Túi du lịch chống nước',
+        en: 'Water-resistant travel bag',
+        id: 'Tas perjalanan tahan air'
+      },
+      price: 1200000,
+      images: ['/images/products/explorer-travel-bag-1.jpg', '/images/products/explorer-travel-bag-2.jpg'],
+      specifications: {
+        material: {
+          vi: 'Vải Oxford chống nước',
+          en: 'Water-resistant Oxford Fabric',
+          id: 'Kain Oxford Tahan Air'
+        },
+        capacity: {
+          vi: '45 lít',
+          en: '45 liters',
+          id: '45 liter'
+        },
+        dimensions: {
+          vi: '55cm x 35cm x 25cm',
+          en: '55cm x 35cm x 25cm',
+          id: '55cm x 35cm x 25cm'
+        }
+      },
+      categorySlug: 'travel-bags',
+      status: 'ACTIVE' as const,
+      featured: true,
+      sortOrder: 3,
+      seoTitle: {
+        vi: 'Túi du lịch Explorer - Chống nước cao cấp | TBS Group',
+        en: 'Explorer Travel Bag - Premium Water-resistant | TBS Group',
+        id: 'Tas Perjalanan Explorer - Tahan Air Premium | TBS Group'
+      },
+      seoDesc: {
+        vi: 'Túi du lịch Explorer chống nước, dung tích lớn 45L. Thiết kế thông minh cho mọi chuyến đi từ TBS Group.',
+        en: 'Explorer travel bag water-resistant with large 45L capacity. Smart design for all journeys from TBS Group.',
+        id: 'Tas perjalanan Explorer tahan air dengan kapasitas besar 45L. Desain pintar untuk semua perjalanan dari TBS Group.'
+      }
+    },
+  ];
+
+  for (const product of sampleProducts) {
+    const category = await prisma.category.findUnique({
+      where: { slug: product.categorySlug },
+    });
+    
+    if (category) {
+      await prisma.product.upsert({
+        where: { slug: product.slug },
+        update: {},
+        create: {
+          name: product.name,
+          slug: product.slug,
+          description: product.description,
+          shortDesc: product.shortDesc,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          images: product.images,
+          specifications: product.specifications,
+          categoryId: category.id,
+          status: product.status,
+          featured: product.featured,
+          sortOrder: product.sortOrder,
+          seoTitle: product.seoTitle,
+          seoDesc: product.seoDesc,
+        },
+      });
+    }
+  }
+
+  console.log('✅ Sample products created');
   console.log('🌱 Seeding completed!');
+  
+  // Display seed information
+  console.log('\n📋 SEEDED ACCOUNTS:');
+  console.log(`SuperAdmin: ${superAdminEmail} / ${superAdminPassword}`);
+  console.log(`Admin: ${adminEmail} / ${adminPassword}`);
 }
 
 main()

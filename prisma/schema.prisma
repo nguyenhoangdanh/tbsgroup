@@ -8,23 +8,81 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-enum AdminRole {
+enum Role {
   ADMIN
   SUPER_ADMIN
 }
 
-model AdminUser {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  role      AdminRole @default(ADMIN)
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+enum Status {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
 
+model AdminUser {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  status    Status   @default(ACTIVE)
+  firstName String?
+  lastName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?  // ID của SuperAdmin tạo user này
+
+  @@index([email])
+  @@index([status])
   @@map("admin_users")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        Json      // {vi: "Túi xách", en: "Handbags", id: "Tas"}
+  slug        String    @unique
+  description Json?     // Mô tả đa ngôn ngữ
+  thumbnail   String?   // URL ảnh đại diện
+  status      Status    @default(ACTIVE)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([sortOrder])
+  @@map("categories")
+}
+
+model Product {
+  id            String    @id @default(uuid())
+  name          Json      // {vi: "Túi xách Elegance", en: "Elegance Handbag", id: "Tas Elegance"}
+  slug          String    @unique
+  description   Json?     // Mô tả chi tiết đa ngôn ngữ
+  shortDesc     Json?     // Mô tả ngắn
+  price         Decimal?  // Giá (có thể null nếu "liên hệ")
+  originalPrice Decimal?  // Giá gốc (để hiển thị discount)
+  images        String[]  // Mảng URLs ảnh
+  specifications Json?    // Thông số kỹ thuật {material: {vi: "", en: "", id: ""}, size: {...}, ...}
+  categoryId    String
+  category      Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  status        Status    @default(ACTIVE)
+  featured      Boolean   @default(false) // Sản phẩm nổi bật
+  sortOrder     Int       @default(0)
+  seoTitle      Json?     // SEO title đa ngôn ngữ
+  seoDesc       Json?     // SEO description đa ngôn ngữ
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  inquiries     CustomerInquiry[]
+
+  @@index([slug])
+  @@index([status, featured])
+  @@index([categoryId, status])
+  @@index([sortOrder])
+  @@map("products")
 }
 
 model CustomerInquiry {
@@ -32,54 +90,12 @@ model CustomerInquiry {
   email     String
   content   String
   imageUrls String[]
+  productId String?  // ID sản phẩm khách hàng quan tâm (optional)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
 
+  @@index([email])
+  @@index([createdAt])
+  @@index([productId])
   @@map("customer_inquiries")
-}
-
-model Category {
-  id          String    @id @default(uuid())
-  name        String
-  nameVi      String?
-  nameEn      String?
-  nameId      String?
-  description String?
-  descriptionVi String?
-  descriptionEn String?
-  descriptionId String?
-  imageUrl    String?
-  slug        String    @unique
-  isActive    Boolean   @default(true)
-  sortOrder   Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  products    Product[]
-
-  @@map("categories")
-}
-
-model Product {
-  id          String    @id @default(uuid())
-  name        String
-  nameVi      String?
-  nameEn      String?
-  nameId      String?
-  description String?
-  descriptionVi String?
-  descriptionEn String?
-  descriptionId String?
-  imageUrls   String[]
-  slug        String    @unique
-  price       Decimal?
-  isActive    Boolean   @default(true)
-  isFeatured  Boolean   @default(false)
-  sortOrder   Int       @default(0)
-  categoryId  String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-
-  @@map("products")
 }

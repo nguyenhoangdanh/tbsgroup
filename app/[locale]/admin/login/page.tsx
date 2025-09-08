@@ -30,18 +30,25 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
+      console.log('Attempting sign in with:', formData.email);
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
         redirect: false,
       });
 
+      console.log('Sign in result:', result);
+
       if (result?.error) {
+        console.error('Sign in error:', result.error);
         setError(t('error'));
-      } else {
+      } else if (result?.ok) {
+        console.log('Sign in successful, redirecting...');
         router.push(`/${locale}/admin`);
+        router.refresh();
       }
     } catch (err) {
+      console.error('Unexpected error:', err);
       setError(t('error'));
     } finally {
       setIsLoading(false);

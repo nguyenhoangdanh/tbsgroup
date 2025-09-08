@@ -2,29 +2,33 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-
-import { z } from 'zod';
+import { adminUserUpdateSchema } from '@/lib/validations';
 import bcrypt from 'bcryptjs';
 
+// Check if user is SuperAdmin
+async function checkSuperAdminAuth() {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'SUPER_ADMIN') {
+    return false;
+  }
+  return true;
+}
 
-const userUpdateSchema = z.object({
-  email: z.string().email('Valid email is required').optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters').optional(),
-  role: z.enum(['ADMIN', 'SUPER_ADMIN']).optional(),
-  isActive: z.boolean().optional(),
-});
-
-// GET - Get single user (SuperAdmin only)
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    
-
-    const session = await getServerSession(authOptions);
-    if (!session?.user || session.user.role !== 'SUPER_ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Check SuperAdmin authorization
+    const isAuthorized = await checkSuperAdminAuth();
+    if (!isAuthorized) {
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Super Admin access required'
+        }
+      }, { status: 403 });
     }
 
     const user = await prisma.adminUser.findUnique({
@@ -33,158 +37,244 @@ export async function GET(
         id: true,
         email: true,
         role: true,
-        isActive: true,
+        status: true,
+        firstName: true,
+        lastName: true,
         createdAt: true,
         updatedAt: true,
+        createdBy: true,
       }
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Admin user not found'
+          }
+        },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json({
+      success: true,
+      data: user
+    });
   } catch (error) {
-    console.error('User fetch error:', error);
+    console.error('Admin user fetch error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false,
+        error: {
+          code: 'FETCH_ERROR',
+          message: 'Failed to fetch admin user'
+        }
+      },
       { status: 500 }
     );
   }
 }
 
-// PUT - Update user (SuperAdmin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    
-
+    // Check SuperAdmin authorization
     const session = await getServerSession(authOptions);
-    if (!session?.user || session.user.role !== 'SUPER_ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const isAuthorized = await checkSuperAdminAuth();
+    if (!isAuthorized) {
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Super Admin access required'
+        }
+      }, { status: 403 });
     }
 
     const body = await request.json();
-    const validatedData = userUpdateSchema.parse(body);
+    const validatedData = adminUserUpdateSchema.parse(body);
 
-    // Check if user exists
+    // Check if the user exists
     const existingUser = await prisma.adminUser.findUnique({
-      where: { id: params.id }
+      where: { id: params.id },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    // Prevent SuperAdmin from demoting themselves
-    if (params.id === session.user.id && validatedData.role && validatedData.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
-        { error: 'Cannot change your own role' },
-        { status: 400 }
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Admin user not found'
+          }
+        },
+        { status: 404 }
       );
     }
 
-    // Prevent SuperAdmin from deactivating themselves
-    if (params.id === session.user.id && validatedData.isActive === false) {
+    // Prevent SuperAdmin from deleting themselves
+    if (existingUser.id === session!.user.id && validatedData.status === 'INACTIVE') {
       return NextResponse.json(
-        { error: 'Cannot deactivate your own account' },
+        { 
+          success: false,
+          error: {
+            code: 'SELF_DEACTIVATION',
+            message: 'Cannot deactivate your own account'
+          }
+        },
         { status: 400 }
       );
     }
 
     // Check if email already exists (if updating email)
     if (validatedData.email && validatedData.email !== existingUser.email) {
-      const emailExists = await prisma.adminUser.findUnique({
-        where: { email: validatedData.email }
+      const userWithEmail = await prisma.adminUser.findUnique({
+        where: { email: validatedData.email },
       });
 
-      if (emailExists) {
+      if (userWithEmail) {
         return NextResponse.json(
-          { error: 'User with this email already exists' },
+          { 
+            success: false,
+            error: {
+              code: 'DUPLICATE_EMAIL',
+              message: 'Admin user with this email already exists'
+            }
+          },
           { status: 400 }
         );
       }
     }
 
-    const updateData: any = { ...validatedData };
+    const { id, password, ...updateData } = validatedData;
 
     // Hash password if provided
-    if (validatedData.password) {
-      updateData.password = await bcrypt.hash(validatedData.password, 12);
+    if (password) {
+      (updateData as any).password = await bcrypt.hash(password, 12);
     }
 
-    const updatedUser = await prisma.adminUser.update({
+    const user = await prisma.adminUser.update({
       where: { id: params.id },
       data: updateData,
       select: {
         id: true,
         email: true,
         role: true,
-        isActive: true,
+        status: true,
+        firstName: true,
+        lastName: true,
         createdAt: true,
         updatedAt: true,
+        createdBy: true,
       }
     });
 
-    return NextResponse.json(updatedUser);
+    return NextResponse.json({
+      success: true,
+      data: user,
+      message: 'Admin user updated successfully'
+    });
   } catch (error) {
-    console.error('User update error:', error);
-    
-    if (error instanceof z.ZodError) {
+    console.error('Admin user update error:', error);
+    if (error && typeof error === 'object' && 'errors' in error) {
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors },
+        { 
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Validation failed',
+            details: error.errors
+          }
+        },
         { status: 400 }
       );
     }
-
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false,
+        error: {
+          code: 'UPDATE_ERROR',
+          message: 'Failed to update admin user'
+        }
+      },
       { status: 500 }
     );
   }
 }
 
-// DELETE - Delete user (SuperAdmin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    
-
+    // Check SuperAdmin authorization
     const session = await getServerSession(authOptions);
-    if (!session?.user || session.user.role !== 'SUPER_ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const isAuthorized = await checkSuperAdminAuth();
+    if (!isAuthorized) {
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Super Admin access required'
+        }
+      }, { status: 403 });
     }
 
-    // Check if user exists
+    // Check if the user exists
     const existingUser = await prisma.adminUser.findUnique({
-      where: { id: params.id }
+      where: { id: params.id },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json(
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Admin user not found'
+          }
+        },
+        { status: 404 }
+      );
     }
 
     // Prevent SuperAdmin from deleting themselves
-    if (params.id === session.user.id) {
+    if (existingUser.id === session!.user.id) {
       return NextResponse.json(
-        { error: 'Cannot delete your own account' },
+        { 
+          success: false,
+          error: {
+            code: 'SELF_DELETION',
+            message: 'Cannot delete your own account'
+          }
+        },
         { status: 400 }
       );
     }
 
     await prisma.adminUser.delete({
-      where: { id: params.id }
+      where: { id: params.id },
     });
 
-    return NextResponse.json({ message: 'User deleted successfully' });
+    return NextResponse.json({
+      success: true,
+      message: 'Admin user deleted successfully'
+    });
   } catch (error) {
-    console.error('User deletion error:', error);
+    console.error('Admin user deletion error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false,
+        error: {
+          code: 'DELETE_ERROR',
+          message: 'Failed to delete admin user'
+        }
+      },
       { status: 500 }
     );
   }
