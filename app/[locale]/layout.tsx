@@ -46,7 +46,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <Navbar />
-            <main className="min-h-screen">
+            <main className="min-h-screen pt-16 lg:pt-20 bg-neutral-50">
               {children}
             </main>
             <Footer />
