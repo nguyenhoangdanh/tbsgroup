@@ -223,7 +223,7 @@ export default function ChangePasswordModal({
               <button
                 type="button"
                 onClick={() => setShowNewPassword(!showNewPassword)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-neutral-400 hover:text-neutral-600"
               >
                 {showNewPassword ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -278,7 +278,7 @@ export default function ChangePasswordModal({
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-neutral-400 hover:text-neutral-600"
             >
               {showConfirmPassword ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
