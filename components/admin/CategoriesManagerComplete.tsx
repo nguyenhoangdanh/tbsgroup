@@ -405,7 +405,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
       <div className="section-spacing">
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Total Categories</p>
@@ -419,7 +419,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active</p>
@@ -433,7 +433,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Inactive</p>
@@ -447,7 +447,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Draft</p>
@@ -463,7 +463,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
         </div>
 
         {/* Search and Filters */}
-        <Card className="p-6">
+        <Card padding="md">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex-1 max-w-md">
               <SearchBox
