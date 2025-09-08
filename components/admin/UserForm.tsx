@@ -305,7 +305,7 @@ const UserForm: React.FC<UserFormProps> = ({
               <p className="mt-1 text-sm text-red-600">{errors.role}</p>
             )}
             {isEditingSelf && (
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-neutral-600">
                 You cannot change your own role
               </p>
             )}
@@ -325,7 +325,7 @@ const UserForm: React.FC<UserFormProps> = ({
               />
               <span className="text-sm font-medium text-slate-700">Active Account</span>
             </label>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-neutral-600 mt-1">
               {isEditingSelf 
                 ? 'You cannot deactivate your own account'
                 : 'Inactive users cannot sign in'
