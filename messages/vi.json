@@ -31,15 +31,15 @@
     },
     "cta": {
       "explore": "Khám phá",
-      "contact": "Liên hệ"
+      "contact": "Liên hệ ngay"
     },
     "scroll": {
       "down": "Cuộn xuống"
     }
   },
   "about": {
-    "title": "Về TBS Group",
-    "description": "Với hơn 20 năm kinh nghiệm trong ngành thời trang, TBS Group Handbag Division tự hào là đơn vị tiên phong trong việc tạo ra những sản phẩm túi xách chất lượng cao, kết hợp giữa nghệ thuật truyền thống và công nghệ hiện đại."
+    "title": "Về chúng tôi",
+    "description": "TBS Group Handbag Division - Chuyên sản xuất túi xách cao cấp với tay nghề thủ công tinh xảo và tầm nhìn toàn cầu. Chúng tôi cam kết mang đến những sản phẩm chất lượng với thiết kế tinh tế và bền vững."
   },
   "collections": {
     "title": "Bộ sưu tập nổi bật",
@@ -103,11 +103,11 @@
   },
   "admin": {
     "login": {
-      "title": "Đăng nhập quản trị",
+      "title": "Đăng nhập Admin",
       "email": "Email",
-      "password": "Mật khẩu",
+      "password": "Mật khẩu", 
       "submit": "Đăng nhập",
-      "error": "Email hoặc mật khẩu không đúng"
+      "error": "Email hoặc mật khẩu không chính xác"
     },
     "dashboard": {
       "title": "Danh sách yêu cầu tư vấn",

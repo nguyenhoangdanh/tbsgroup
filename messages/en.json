@@ -31,15 +31,15 @@
     },
     "cta": {
       "explore": "Explore",
-      "contact": "Contact"
+      "contact": "Contact Now"
     },
     "scroll": {
       "down": "Scroll down"
     }
   },
   "about": {
-    "title": "About TBS Group",
-    "description": "With over 20 years of experience in the fashion industry, TBS Group Handbag Division proudly pioneers in creating high-quality handbag products, combining traditional craftsmanship with modern technology."
+    "title": "About Us",
+    "description": "TBS Group Handbag Division - Specializing in premium handbag manufacturing with artisanal craftsmanship and global vision. We are committed to delivering quality products with sophisticated design and sustainability."
   },
   "collections": {
     "title": "Featured Collections",
@@ -77,7 +77,8 @@
     "craftsmanship": {
       "title": "Skilled Craftsmanship",
       "description": "Team of skilled craftsmen with years of experience"
-    }
+    },
+    "contact": "Contact"
   },
   "contact": {
     "title": "Contact for Consultation",
@@ -105,7 +106,7 @@
       "title": "Admin Login",
       "email": "Email",
       "password": "Password",
-      "submit": "Login",
+      "submit": "Sign In", 
       "error": "Invalid email or password"
     },
     "dashboard": {

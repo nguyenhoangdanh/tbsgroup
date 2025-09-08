@@ -73,6 +73,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/admin/login',
+    error: '/admin/login',
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -88,11 +89,27 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Redirect to admin dashboard after login
-      if (url.includes('/api/auth/signin')) {
-        return `${baseUrl}/admin`;
+      // Extract locale from the URL or default to 'vi'
+      const urlObj = new URL(url.startsWith('http') ? url : baseUrl + url);
+      const pathSegments = urlObj.pathname.split('/').filter(Boolean);
+      const supportedLocales = ['vi', 'en', 'id'];
+      const locale = supportedLocales.includes(pathSegments[0]) ? pathSegments[0] : 'vi';
+      
+      // Redirect to admin dashboard after login with proper locale
+      if (url.includes('/api/auth/signin') || url.includes('callbackUrl')) {
+        return `${baseUrl}/${locale}/admin`;
       }
-      return url.startsWith(baseUrl) ? url : baseUrl;
+      
+      // Ensure the URL has a locale prefix
+      if (url.startsWith(baseUrl)) {
+        const relativePath = url.replace(baseUrl, '');
+        if (!supportedLocales.some(loc => relativePath.startsWith(`/${loc}`))) {
+          return `${baseUrl}/${locale}${relativePath}`;
+        }
+        return url;
+      }
+      
+      return `${baseUrl}/${locale}`;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

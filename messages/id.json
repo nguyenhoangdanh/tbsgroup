@@ -31,15 +31,16 @@
     },
     "cta": {
       "explore": "Jelajahi",
-      "contact": "Kontak"
+      "contact": "Kontak",
+      "id": "Hubungi Sekarang"
     },
     "scroll": {
       "down": "Gulir ke bawah"
     }
   },
   "about": {
-    "title": "Tentang TBS Group",
-    "description": "Dengan lebih dari 20 tahun pengalaman di industri fashion, TBS Group Handbag Division dengan bangga memelopori dalam menciptakan produk tas tangan berkualitas tinggi, menggabungkan kerajinan tradisional dengan teknologi modern."
+    "title": "Tentang Kami",
+    "description": "TBS Group Handbag Division - Spesialisasi manufaktur tas premium dengan keahlian tangan dan visi global. Kami berkomitmen menghadirkan produk berkualitas dengan desain yang canggih dan berkelanjutan."
   },
   "collections": {
     "title": "Koleksi Unggulan",
@@ -77,7 +78,8 @@
     "craftsmanship": {
       "title": "Keahlian Terampil",
       "description": "Tim pengrajin terampil dengan pengalaman bertahun-tahun"
-    }
+    },
+    "contact": "Hubungi"
   },
   "contact": {
     "title": "Kontak untuk Konsultasi",
@@ -106,7 +108,7 @@
       "email": "Email",
       "password": "Kata Sandi",
       "submit": "Masuk",
-      "error": "Email atau kata sandi tidak valid"
+      "error": "Email atau kata sandi salah"
     },
     "dashboard": {
       "title": "Permintaan Konsultasi",
