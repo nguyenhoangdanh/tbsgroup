@@ -2,15 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
-
-const updateCategorySchema = z.object({
-  name: z.string().min(1, 'Name is required').optional(),
-  slug: z.string().min(1, 'Slug is required').optional(),
-  description: z.string().optional(),
-  imageUrl: z.string().optional(),
-  isActive: z.boolean().optional(),
-});
+import { categoryUpdateSchema } from '@/lib/validations';
 
 // Check if user is SuperAdmin
 async function checkSuperAdminAuth() {
@@ -29,7 +21,13 @@ export async function GET(
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        }
+      }, { status: 401 });
     }
 
     const category = await prisma.category.findUnique({
@@ -41,7 +39,7 @@ export async function GET(
             name: true,
             slug: true,
             price: true,
-            isActive: true,
+            status: true,
           }
         },
         _count: {
@@ -52,16 +50,31 @@ export async function GET(
 
     if (!category) {
       return NextResponse.json(
-        { error: 'Category not found' },
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Category not found'
+          }
+        },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(category);
+    return NextResponse.json({
+      success: true,
+      data: category
+    });
   } catch (error) {
     console.error('Category fetch error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch category' },
+      { 
+        success: false,
+        error: {
+          code: 'FETCH_ERROR',
+          message: 'Failed to fetch category'
+        }
+      },
       { status: 500 }
     );
   }
@@ -75,11 +88,17 @@ export async function PUT(
     // Check SuperAdmin authorization
     const isAuthorized = await checkSuperAdminAuth();
     if (!isAuthorized) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Super Admin access required'
+        }
+      }, { status: 403 });
     }
 
     const body = await request.json();
-    const validatedData = updateCategorySchema.parse(body);
+    const validatedData = categoryUpdateSchema.parse(body);
 
     // Check if the category exists
     const existingCategory = await prisma.category.findUnique({
@@ -88,7 +107,13 @@ export async function PUT(
 
     if (!existingCategory) {
       return NextResponse.json(
-        { error: 'Category not found' },
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Category not found'
+          }
+        },
         { status: 404 }
       );
     }
@@ -101,15 +126,23 @@ export async function PUT(
 
       if (categoryWithSlug) {
         return NextResponse.json(
-          { error: 'Category with this slug already exists' },
+          { 
+            success: false,
+            error: {
+              code: 'DUPLICATE_SLUG',
+              message: 'Category with this slug already exists'
+            }
+          },
           { status: 400 }
         );
       }
     }
 
+    const { id, ...updateData } = validatedData;
+
     const category = await prisma.category.update({
       where: { id: params.id },
-      data: validatedData,
+      data: updateData,
       include: {
         _count: {
           select: { products: true }
@@ -117,17 +150,34 @@ export async function PUT(
       }
     });
 
-    return NextResponse.json(category);
+    return NextResponse.json({
+      success: true,
+      data: category,
+      message: 'Category updated successfully'
+    });
   } catch (error) {
     console.error('Category update error:', error);
-    if (error instanceof z.ZodError) {
+    if (error && typeof error === 'object' && 'errors' in error) {
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors },
+        { 
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Validation failed',
+            details: error.errors
+          }
+        },
         { status: 400 }
       );
     }
     return NextResponse.json(
-      { error: 'Failed to update category' },
+      { 
+        success: false,
+        error: {
+          code: 'UPDATE_ERROR',
+          message: 'Failed to update category'
+        }
+      },
       { status: 500 }
     );
   }
@@ -141,7 +191,13 @@ export async function DELETE(
     // Check SuperAdmin authorization
     const isAuthorized = await checkSuperAdminAuth();
     if (!isAuthorized) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      return NextResponse.json({ 
+        success: false,
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Super Admin access required'
+        }
+      }, { status: 403 });
     }
 
     // Check if the category exists
@@ -156,7 +212,13 @@ export async function DELETE(
 
     if (!existingCategory) {
       return NextResponse.json(
-        { error: 'Category not found' },
+        { 
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'Category not found'
+          }
+        },
         { status: 404 }
       );
     }
@@ -164,7 +226,13 @@ export async function DELETE(
     // Check if category has products
     if (existingCategory._count.products > 0) {
       return NextResponse.json(
-        { error: 'Cannot delete category with existing products' },
+        { 
+          success: false,
+          error: {
+            code: 'HAS_PRODUCTS',
+            message: 'Cannot delete category with existing products'
+          }
+        },
         { status: 400 }
       );
     }
@@ -173,11 +241,20 @@ export async function DELETE(
       where: { id: params.id },
     });
 
-    return NextResponse.json({ message: 'Category deleted successfully' });
+    return NextResponse.json({
+      success: true,
+      message: 'Category deleted successfully'
+    });
   } catch (error) {
     console.error('Category deletion error:', error);
     return NextResponse.json(
-      { error: 'Failed to delete category' },
+      { 
+        success: false,
+        error: {
+          code: 'DELETE_ERROR',
+          message: 'Failed to delete category'
+        }
+      },
       { status: 500 }
     );
   }

@@ -171,7 +171,7 @@ export function ProductsPage({ locale }: ProductsPageProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
-                    {product.imageUrls.length > 0 && (
+                    {product?.imageUrls?.length > 0 && (
                       <img
                         src={product.imageUrls[0]}
                         alt={product.name}
@@ -212,7 +212,7 @@ export function ProductsPage({ locale }: ProductsPageProps) {
                       </span>
                       
                       <span className="text-sm text-gray-500">
-                        {product.imageUrls.length} images
+                        {product?.imageUrls?.length} images
                       </span>
                     </div>
                     

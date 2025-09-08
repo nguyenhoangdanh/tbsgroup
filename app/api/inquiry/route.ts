@@ -13,8 +13,12 @@ export async function POST(request: NextRequest) {
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { 
-          error: 'Too many requests. Please wait before submitting again.',
-          resetTime: rateLimitResult.resetTime 
+          success: false,
+          error: {
+            code: 'RATE_LIMIT_EXCEEDED',
+            message: 'Too many requests. Please wait before submitting again.',
+            resetTime: rateLimitResult.resetTime
+          }
         },
         { status: 429 }
       );
@@ -26,12 +30,40 @@ export async function POST(request: NextRequest) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: result.error.errors },
+        { 
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid request data',
+            details: result.error.errors
+          }
+        },
         { status: 400 }
       );
     }
 
-    const { email, content, imageUrls } = result.data;
+    const { email, content, imageUrls, productId } = result.data;
+
+    // Validate product exists if productId is provided
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: { id: productId },
+        select: { id: true }
+      });
+
+      if (!product) {
+        return NextResponse.json(
+          { 
+            success: false,
+            error: {
+              code: 'INVALID_PRODUCT',
+              message: 'Product not found'
+            }
+          },
+          { status: 400 }
+        );
+      }
+    }
 
     // Save to database
     const inquiry = await prisma.customerInquiry.create({
@@ -39,6 +71,7 @@ export async function POST(request: NextRequest) {
         email,
         content,
         imageUrls,
+        productId,
       },
     });
 
@@ -46,12 +79,21 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ 
       success: true,
-      message: 'Inquiry submitted successfully'
+      message: 'Inquiry submitted successfully',
+      data: {
+        id: inquiry.id
+      }
     });
   } catch (error) {
     console.error('Inquiry submission error:', error);
     return NextResponse.json(
-      { error: 'Failed to submit inquiry' },
+      { 
+        success: false,
+        error: {
+          code: 'SUBMISSION_ERROR',
+          message: 'Failed to submit inquiry'
+        }
+      },
       { status: 500 }
     );
   }
