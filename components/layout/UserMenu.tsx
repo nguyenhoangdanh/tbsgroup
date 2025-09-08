@@ -84,18 +84,16 @@ const UserMenu: React.FC<UserMenuProps> = ({
   return (
     <div className="relative" ref={menuRef}>
       {/* User Avatar Button */}
-      <Button
-        variant="ghost"
-        size="sm"
+      <button
         onClick={toggleMenu}
-        className="flex items-center space-x-2 text-slate-600 hover:text-slate-900"
+        className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 px-3 py-2 rounded-md transition-colors"
       >
         <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
           <span className="text-slate-600 font-medium text-sm">
             {user.firstName ? user.firstName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
           </span>
         </div>
-        <span className="hidden sm:block text-sm">
+        <span className="hidden sm:block text-sm font-medium">
           {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email}
         </span>
         <svg
@@ -106,7 +104,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
-      </Button>
+      </button>
 
       {/* Dropdown Menu */}
       <AnimatePresence>

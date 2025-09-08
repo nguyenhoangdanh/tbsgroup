@@ -1,11 +1,11 @@
 import { useLocale } from 'next-intl';
 
 // Utility type for multilingual content
-export type MultilingualContent = {
+export interface MultilingualContent {
   vi: string;
   en: string;
   id: string;
-};
+}
 
 // Hook to get translated content based on current locale
 export function useTranslatedContent() {
@@ -23,11 +23,17 @@ export function useTranslatedContent() {
 
 // Server-side function to get translated content
 export function getTranslatedContent(
-  content: MultilingualContent | string, 
+  content: MultilingualContent | undefined, 
   locale: 'vi' | 'en' | 'id' = 'vi'
 ): string {
-  if (typeof content === 'string') {
-    return content;
-  }
-  return content[locale] || content.vi || content.en || '';
+  if (!content) return '';
+  return content[locale] || content.en || content.vi || '';
+}
+
+export function createMultilingualContent(
+  vi: string = '',
+  en: string = '',
+  id: string = ''
+): MultilingualContent {
+  return { vi, en, id };
 }

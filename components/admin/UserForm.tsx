@@ -369,7 +369,7 @@ const UserForm: React.FC<UserFormProps> = ({
           <Button
             type="submit"
             variant="accent"
-            isLoading={isSubmitting}
+            loading={isSubmitting}
             disabled={isSubmitting}
           >
             {user ? 'Update User' : 'Create User'}

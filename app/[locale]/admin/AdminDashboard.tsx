@@ -44,18 +44,18 @@ export function AdminDashboard({ locale }: AdminDashboardProps) {
       title="Dashboard"
       user={session.user as any}
     >
-      <div className="section-spacing">
+      <div className="p-6 space-y-6">
         {/* Welcome Card */}
         <Card padding="md">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-neutral-900">
+              <h1 className="text-2xl font-bold text-slate-900">
                 Welcome back!
               </h1>
-              <p className="text-neutral-600 mt-1">
+              <p className="text-slate-600 mt-1">
                 {session.user.email}
                 {session.user.role === 'SUPER_ADMIN' && (
-                  <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent-light text-accent">
+                  <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                     Super Admin
                   </span>
                 )}

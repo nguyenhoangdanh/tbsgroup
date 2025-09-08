@@ -1,13 +1,9 @@
-'use client';
-
 import React, { useState } from 'react';
 import { MultilingualContent } from '@/lib/utils/multilingual';
-import { 
-  Modal, 
-  Input, 
-  Button, 
-  Badge
-} from '@/components/ui';
+import Modal from '@/components/ui/Modal';
+import { Input } from '@/components/ui/Form';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
 
 interface Category {
   id: string;
@@ -366,7 +362,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           <Button
             type="submit"
             variant="primary"
-            isLoading={isSubmitting}
+            loading={isSubmitting}
             disabled={isSubmitting}
           >
             {category ? 'Update Category' : 'Create Category'}

@@ -1,8 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/components/providers/AuthProvider';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { ConditionalLayout } from '@/components/ConditionalLayout';
 import { generateSEOMetadata, generateOrganizationSchema } from '@/lib/seo';
 import '../globals.css';
 
@@ -45,11 +44,9 @@ export default async function RootLayout({
       <body className="font-sans">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
-            <Navbar />
-            <main className="min-h-screen pt-16 lg:pt-20 bg-neutral-50">
+            <ConditionalLayout>
               {children}
-            </main>
-            <Footer />
+            </ConditionalLayout>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

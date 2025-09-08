@@ -1,48 +1,75 @@
 import React from 'react';
-import { clsx } from 'clsx';
-import { CardProps } from '@/types/ui';
+import { cn } from '@/lib/utils';
 
-const Card: React.FC<CardProps> = ({
-  header,
-  footer,
-  hoverable = false,
+interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  hover?: boolean;
+}
+
+const Card: React.FC<CardProps> = ({ 
+  children, 
+  className, 
   padding = 'md',
-  className,
-  children,
-  ...props
+  hover = false 
 }) => {
-  const cardClasses = clsx(
-    'card',
-    {
-      'hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer': hoverable,
-    },
-    className
-  );
-
   const paddingClasses = {
     none: '',
-    sm: 'p-3',
+    sm: 'p-4',
     md: 'p-6',
     lg: 'p-8'
   };
 
   return (
-    <div className={cardClasses} {...props}>
-      {header && (
-        <div className="card-header">
-          {header}
-        </div>
+    <div 
+      className={cn(
+        'bg-white rounded-lg border border-slate-200 shadow-sm',
+        hover && 'hover:shadow-md transition-shadow duration-200',
+        paddingClasses[padding],
+        className
       )}
-      
-      <div className={clsx('card-body', paddingClasses[padding])}>
-        {children}
-      </div>
-      
-      {footer && (
-        <div className="card-footer">
-          {footer}
-        </div>
-      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+interface CardHeaderProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardHeader: React.FC<CardHeaderProps> = ({ children, className }) => {
+  return (
+    <div className={cn('px-6 py-4 border-b border-slate-200', className)}>
+      {children}
+    </div>
+  );
+};
+
+interface CardBodyProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardBody: React.FC<CardBodyProps> = ({ children, className }) => {
+  return (
+    <div className={cn('p-6', className)}>
+      {children}
+    </div>
+  );
+};
+
+interface CardFooterProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardFooter: React.FC<CardFooterProps> = ({ children, className }) => {
+  return (
+    <div className={cn('px-6 py-4 border-t border-slate-200 bg-slate-50', className)}>
+      {children}
     </div>
   );
 };

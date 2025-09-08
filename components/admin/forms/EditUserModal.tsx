@@ -311,8 +311,8 @@ export default function EditUserModal({
           
           <Button
             type="submit"
-            variant="accent"
-            isLoading={isLoading}
+            variant="outline"
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Updating...' : 'Update User'}

@@ -178,7 +178,7 @@ export default function DeleteProductDialog({
           <Button
             variant="destructive"
             onClick={handleDelete}
-            isLoading={isLoading}
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Deleting...' : 'Delete Product'}

@@ -323,7 +323,7 @@ export default function CreateCategoryModal({
           <Button
             type="submit"
             variant="primary"
-            isLoading={isLoading}
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Creating...' : 'Create Category'}

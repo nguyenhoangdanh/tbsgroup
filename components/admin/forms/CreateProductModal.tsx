@@ -843,7 +843,7 @@ export default function CreateProductModal({
               <Button
                 variant="primary"
                 onClick={handleSubmit}
-                isLoading={isLoading}
+                loading={isLoading}
                 disabled={isLoading}
               >
                 {isLoading ? 'Creating...' : 'Create Product'}

@@ -343,8 +343,8 @@ export default function ChangePasswordModal({
           
           <Button
             type="submit"
-            variant="accent"
-            isLoading={isLoading}
+            variant="outline"
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Changing...' : 'Change Password'}

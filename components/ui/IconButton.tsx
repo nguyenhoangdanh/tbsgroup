@@ -21,7 +21,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         size={size}
         onClick={onClick}
         disabled={disabled}
-        isLoading={isLoading}
+        loading={isLoading}
         icon={icon}
         className={cn('p-2', className)}
         {...props}

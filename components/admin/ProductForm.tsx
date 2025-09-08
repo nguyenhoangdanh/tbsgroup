@@ -615,7 +615,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <Button
             type="submit"
             variant="primary"
-            isLoading={isSubmitting}
+            loading={isSubmitting}
             disabled={isSubmitting}
           >
             {product ? 'Update Product' : 'Create Product'}

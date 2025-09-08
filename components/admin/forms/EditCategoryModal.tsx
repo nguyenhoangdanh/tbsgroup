@@ -365,7 +365,7 @@ export default function EditCategoryModal({
           <Button
             type="submit"
             variant="primary"
-            isLoading={isLoading}
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Updating...' : 'Update Category'}

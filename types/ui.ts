@@ -42,26 +42,33 @@ export interface InputProps extends BaseComponentProps {
 }
 
 // Table component types
-export interface TableColumn<T> {
-  key: keyof T | string;
+export interface TableColumn<T = any> {
+  key: string;
   label: string;
   sortable?: boolean;
-  filterable?: boolean;
-  render?: (value: any, item: T, index: number) => ReactNode;
-  width?: string | number;
   align?: 'left' | 'center' | 'right';
-  sticky?: boolean;
+  width?: number;
+  render?: (value: any, item: T) => React.ReactNode;
 }
 
-export interface TableAction<T> {
+export interface TableAction<T = any> {
   label: string;
   icon?: ReactNode;
   onClick: (item: T) => void;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'destructive';
   disabled?: (item: T) => boolean;
-  variant?: ButtonVariant;
 }
 
-export interface PaginationData {
+export interface TablePaginationProps {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface PaginationProps {
   page: number;
   pageSize: number;
   total: number;
@@ -83,7 +90,7 @@ export interface TableProps<T> extends BaseComponentProps {
   data: T[];
   columns: TableColumn<T>[];
   isLoading?: boolean;
-  pagination?: PaginationData;
+  pagination?: PaginationProps;
   sorting?: SortingState;
   onSort?: (field: string, direction: 'asc' | 'desc') => void;
   onPageChange?: (page: number) => void;
@@ -259,15 +266,13 @@ export interface PaginationProps extends BaseComponentProps {
 }
 
 // Search component types
-export interface SearchBoxProps extends BaseComponentProps {
-  value?: string;
-  onChange?: (value: string) => void;
-  onSearch?: (value: string) => void;
+export interface SearchBoxProps {
+  value: string;
+  onChange: (value: string) => void;
+  onClear?: () => void;
   placeholder?: string;
   disabled?: boolean;
-  loading?: boolean;
-  debounceMs?: number;
-  clearable?: boolean;
+  className?: string;
 }
 
 // Empty state component types

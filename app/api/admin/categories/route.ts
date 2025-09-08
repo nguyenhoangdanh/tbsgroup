@@ -41,7 +41,9 @@ export async function GET(request: NextRequest) {
     if (search) {
       where.OR = [
         { slug: { contains: search, mode: 'insensitive' } },
-        // For JSON fields, we need to use raw SQL or specific search methods
+        { name: { path: ['vi'], string_contains: search } },
+        { name: { path: ['en'], string_contains: search } },
+        { name: { path: ['id'], string_contains: search } },
       ];
     }
 

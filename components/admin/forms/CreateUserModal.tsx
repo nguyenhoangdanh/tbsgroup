@@ -385,8 +385,8 @@ export default function CreateUserModal({
           
           <Button
             type="submit"
-            variant="accent"
-            isLoading={isLoading}
+            variant="outline"
+            loading={isLoading}
             disabled={isLoading}
           >
             {isLoading ? 'Creating...' : 'Create User'}

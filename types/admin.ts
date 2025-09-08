@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { MultilingualContent } from '@/lib/utils/multilingual';
 
 // Admin user types
 export interface AdminUser {
@@ -61,12 +62,21 @@ export interface NavigationItem {
 
 // Layout types
 export interface AdminLayoutProps {
-  children: ReactNode;
   title?: string;
   breadcrumbs?: BreadcrumbItem[];
-  actions?: ReactNode;
-  sidebar?: boolean;
+  actions?: React.ReactNode;
   user: AdminUser;
+  children: React.ReactNode;
+  sidebar?: boolean;
+}
+
+export interface AdminHeaderProps {
+  title?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  actions?: React.ReactNode;
+  user: AdminUser;
+  onSidebarToggle: () => void;
+  sidebarOpen: boolean;
 }
 
 export interface AdminSidebarProps {
@@ -74,15 +84,6 @@ export interface AdminSidebarProps {
   onToggle: () => void;
   currentPath: string;
   user: AdminUser;
-}
-
-export interface AdminHeaderProps {
-  title?: string;
-  breadcrumbs?: BreadcrumbItem[];
-  actions?: ReactNode;
-  user: AdminUser;
-  onSidebarToggle: () => void;
-  sidebarOpen?: boolean;
 }
 
 export interface UserMenuProps {
@@ -293,4 +294,19 @@ export interface RoleFormProps {
   onSave: (role: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: MultilingualContent;
+  slug: string;
+  description?: MultilingualContent;
+  thumbnail?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'DRAFT';
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    products: number;
+  };
 }

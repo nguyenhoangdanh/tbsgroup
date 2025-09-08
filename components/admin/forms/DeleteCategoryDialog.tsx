@@ -177,7 +177,7 @@ export default function DeleteCategoryDialog({
             <Button
               variant="destructive"
               onClick={handleDelete}
-              isLoading={isLoading}
+              loading={isLoading}
               disabled={isLoading}
             >
               {isLoading ? 'Deleting...' : 'Delete Category'}

@@ -1,20 +1,20 @@
-"use client"
+"use client";
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { CategoriesManagerProps } from '@/types/admin';
-import { getTranslatedContent, MultilingualContent } from '@/lib/utils/multilingual';
 import { debounce } from '@/lib/utils';
-import AdminLayout from '../layout/AdminLayout';
-import Table from '../ui/Table';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Badge from '../ui/Badge';
-import Card from '../ui/Card';
-import Modal from '../ui/Modal';
-import { EmptyTableState } from '../ui/EmptyState';
+import { getTranslatedContent, MultilingualContent } from '@/lib/utils/multilingual';
+import { CategoriesManagerProps } from '@/types/admin';
 import { TableColumn } from '@/types/ui';
+import AdminLayout from '@/components/layout/AdminLayout';
+import CategoryForm from './CategoryForm';
+import Card from '@/components/ui/Card';
+import Table from '@/components/ui/Table';
+import Button from '@/components/ui/Button';
+import Badge from '@/components/ui/Badge';
+import SearchBox from '@/components/ui/SearchBoxFixed';
+import { EmptyTableState } from '@/components/ui/EmptyState';
 
 interface Category {
   id: string;
@@ -211,7 +211,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
     
     try {
       const response = await fetch(`/api/admin/categories/${id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -386,7 +386,7 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
           )}
           
           <Button
-            variant="accent"
+            variant="outline"
             onClick={() => setShowCreateModal(true)}
             icon={
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -400,16 +400,16 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
       }
     >
       <div className="section-spacing">
-        {/* Stats Cards */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card padding="md">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Total Categories</p>
-                <p className="text-2xl font-bold text-slate-900">{total}</p>
+                <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
               </div>
-              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
@@ -420,13 +420,25 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Active</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {categories.filter(c => c.status === 'ACTIVE').length}
-                </p>
+                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
               </div>
-              <div className="w-12 h-12 bg-success-light rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="md">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">Inactive</p>
+                <p className="text-2xl font-bold text-slate-600">{stats.inactive}</p>
+              </div>
+              <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636" />
                 </svg>
               </div>
             </div>
@@ -436,29 +448,11 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600">Draft</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {categories.filter(c => c.status === 'DRAFT').length}
-                </p>
+                <p className="text-2xl font-bold text-yellow-600">{stats.draft}</p>
               </div>
-              <div className="w-12 h-12 bg-warning-light rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-              </div>
-            </div>
-          </Card>
-
-          <Card padding="md">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">Total Products</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {categories.reduce((acc, c) => acc + (c._count?.products || 0), 0)}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
@@ -467,51 +461,57 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
 
         {/* Search and Filters */}
         <Card padding="md">
-          <div className="flex items-center justify-between">
-            <Input
-              placeholder="Search categories..."
-              value=""
-              onChange={debouncedSearch}
-              className="max-w-md"
-              leftIcon={
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              }
-            />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex-1 max-w-md">
+              <SearchBox
+                value={search}
+                onChange={debouncedSearch}
+                placeholder="Search categories..."
+                className="w-full"
+              />
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearch('');
+                  setPage(1);
+                }}
+                disabled={!search}
+              >
+                Clear
+              </Button>
+            </div>
           </div>
         </Card>
 
-        {/* Error Display */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg"
-          >
-            {error}
-          </motion.div>
-        )}
-
-        {/* Data Table */}
+        {/* Categories Table */}
         <Card>
+          {error && (
+            <div className="p-4 bg-red-50 border-b border-red-200">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
           <Table
             data={categories}
             columns={columns}
+            actions={actions}
             isLoading={loading}
+            selectedRows={selectedRows}
+            onRowSelect={setSelectedRows}
             pagination={{
               page,
               pageSize,
               total,
               totalPages,
               hasNext: page < totalPages,
-              hasPrev: page > 1,
+              hasPrev: page > 1
             }}
-            selectedRows={selectedRows}
-            onRowSelect={setSelectedRows}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
-            actions={actions}
             emptyState={
               <EmptyTableState
                 title="No categories found"
@@ -525,19 +525,17 @@ const CategoriesManager: React.FC<CategoriesManagerProps> = ({ locale }) => {
       </div>
 
       {/* Create/Edit Modal */}
-      <Modal
+      <CategoryForm
         isOpen={showCreateModal || !!editingCategory}
         onClose={() => {
           setShowCreateModal(false);
           setEditingCategory(null);
+          setError('');
         }}
-        title={editingCategory ? 'Edit Category' : 'Create Category'}
-        size="lg"
-      >
-        <div className="p-6">
-          <p>Category form will be implemented here...</p>
-        </div>
-      </Modal>
+        category={editingCategory}
+        onSubmit={editingCategory ? handleEdit : handleCreate}
+        locale={locale}
+      />
     </AdminLayout>
   );
 };

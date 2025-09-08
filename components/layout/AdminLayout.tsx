@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 'use client';
 
+import React, { useState } from 'react';
 import { AdminLayoutProps } from '@/types/admin';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
@@ -27,7 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
   };
 
   return (
-    <div className="flex h-screen bg-neutral-50" {...props}>
+    <div className="flex h-screen bg-gray-50" {...props}>
       {/* Sidebar */}
       {sidebar && (
         <AdminSidebar
@@ -39,11 +39,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       )}
 
       {/* Main Content */}
-      <div className={cn(
-        'flex-1 flex flex-col overflow-hidden transition-all duration-300',
-        // On desktop, always leave space for sidebar. On mobile, use full width
-        sidebar && 'lg:ml-64'
-      )}>
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <AdminHeader
           title={title}
@@ -55,8 +51,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         />
 
         {/* Content */}
-        <main className="flex-1 overflow-auto pt-16">
-          <div className="container-responsive py-6">
+        <main className="flex-1 overflow-auto bg-gray-50">
+          <div className="h-full">
             {children}
           </div>
         </main>
@@ -65,7 +61,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Mobile overlay */}
       {sidebar && sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={handleOverlayClick}
         />
       )}
