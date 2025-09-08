@@ -368,7 +368,7 @@ const UserForm: React.FC<UserFormProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
+            variant="accent"
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
