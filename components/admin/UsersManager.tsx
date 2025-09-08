@@ -336,7 +336,7 @@ const UsersManager: React.FC<UsersManagerProps> = ({ locale }) => {
       actions={
         <div className="flex items-center space-x-3">
           <Button
-            variant="primary"
+            variant="accent"
             onClick={() => setShowCreateModal(true)}
             icon={
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
