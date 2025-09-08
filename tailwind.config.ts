@@ -73,7 +73,7 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-green': 'linear-gradient(135deg, #059669, #10B981, #34D399)',
+        'gradient-green': 'linear-gradient(135deg, #0B6A2F, #2E8B57, #F2C94C)',
       },
     },
   },
