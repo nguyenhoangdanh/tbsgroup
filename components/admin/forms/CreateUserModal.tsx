@@ -362,7 +362,7 @@ export default function CreateUserModal({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-sm font-medium text-blue-800">Security Guidelines</p>
+              <p className="text-sm font-medium text-accent">Security Guidelines</p>
               <ul className="text-sm text-blue-700 mt-1 list-disc list-inside space-y-1">
                 <li>The user will receive login credentials via email</li>
                 <li>They should change their password upon first login</li>
