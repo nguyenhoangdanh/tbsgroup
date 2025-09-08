@@ -102,6 +102,13 @@
     }
   },
   "admin": {
+    "navigation": {
+      "dashboard": "Tổng quan", 
+      "inquiries": "Yêu cầu tư vấn",
+      "categories": "Danh mục",
+      "products": "Sản phẩm", 
+      "users": "Người dùng"
+    },
     "login": {
       "title": "Đăng nhập Admin",
       "email": "Email",
@@ -110,7 +117,7 @@
       "error": "Email hoặc mật khẩu không chính xác"
     },
     "dashboard": {
-      "title": "Danh sách yêu cầu tư vấn",
+      "title": "Tổng quan quản trị",
       "table": {
         "email": "Email",
         "content": "Nội dung",
@@ -119,6 +126,34 @@
       },
       "logout": "Đăng xuất",
       "noData": "Chưa có yêu cầu nào"
+    },
+    "inquiries": {
+      "title": "Quản lý yêu cầu tư vấn",
+      "description": "Xem và quản lý các yêu cầu tư vấn từ khách hàng"
+    },
+    "categories": {
+      "title": "Quản lý danh mục",
+      "description": "Quản lý danh mục sản phẩm (chỉ SuperAdmin)",
+      "create": "Tạo danh mục mới",
+      "search": "Tìm kiếm danh mục...",
+      "loading": "Đang tải...",
+      "noCategories": "Chưa có danh mục nào"
+    },
+    "products": {
+      "title": "Quản lý sản phẩm", 
+      "description": "Quản lý sản phẩm và bộ sưu tập (chỉ SuperAdmin)",
+      "create": "Tạo sản phẩm mới",
+      "search": "Tìm kiếm sản phẩm...",
+      "loading": "Đang tải...",
+      "noProducts": "Chưa có sản phẩm nào"
+    },
+    "users": {
+      "title": "Quản lý người dùng",
+      "description": "Quản lý tài khoản khách hàng (chỉ SuperAdmin)",
+      "create": "Tạo người dùng mới", 
+      "search": "Tìm kiếm người dùng...",
+      "loading": "Đang tải...",
+      "noUsers": "Chưa có người dùng nào"
     }
   },
   "footer": {

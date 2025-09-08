@@ -102,6 +102,13 @@
     }
   },
   "admin": {
+    "navigation": {
+      "dashboard": "Dashboard", 
+      "inquiries": "Inquiries",
+      "categories": "Categories",
+      "products": "Products", 
+      "users": "Users"
+    },
     "login": {
       "title": "Admin Login",
       "email": "Email",
@@ -110,7 +117,7 @@
       "error": "Invalid email or password"
     },
     "dashboard": {
-      "title": "Consultation Requests",
+      "title": "Admin Dashboard",
       "table": {
         "email": "Email",
         "content": "Content",
@@ -119,6 +126,34 @@
       },
       "logout": "Logout",
       "noData": "No requests yet"
+    },
+    "inquiries": {
+      "title": "Manage Inquiries",
+      "description": "View and manage customer consultation requests"
+    },
+    "categories": {
+      "title": "Manage Categories",
+      "description": "Manage product categories (SuperAdmin only)",
+      "create": "Create New Category",
+      "search": "Search categories...",
+      "loading": "Loading...",
+      "noCategories": "No categories yet"
+    },
+    "products": {
+      "title": "Manage Products", 
+      "description": "Manage products and collections (SuperAdmin only)",
+      "create": "Create New Product",
+      "search": "Search products...",
+      "loading": "Loading...",
+      "noProducts": "No products yet"
+    },
+    "users": {
+      "title": "Manage Users",
+      "description": "Manage customer accounts (SuperAdmin only)",
+      "create": "Create New User", 
+      "search": "Search users...",
+      "loading": "Loading...",
+      "noUsers": "No users yet"
     }
   },
   "footer": {
