@@ -15,7 +15,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
 }) => {
   return (
     <header className="admin-header sticky top-0 z-20 bg-white">
-      <div className="flex items-center justify-between">
+      <div className="container-responsive flex items-center justify-between h-16">
         {/* Left side */}
         <div className="flex items-center space-x-4">
           {/* Mobile sidebar toggle */}
